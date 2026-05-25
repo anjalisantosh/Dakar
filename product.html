@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AAKAAR — Statement Choker · Sudha Paridha</title>
+  <meta name="description" content="Statement Choker crafted by Sudha Paridha using traditional Dhokra lost-wax casting. ₹7,500 — handcast in Odisha, India.">
+  <link rel="stylesheet" href="src/css/style.css">
+  <style>
+    /* ── Category Filter Bar (reused) ── */
+    .filter-bar {
+      background: var(--golden-bg);
+      padding: 0 24px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .filter-bar::-webkit-scrollbar { display: none; }
+    .filter-pill {
+      white-space: nowrap;
+      padding: 10px 20px;
+      font-size: 14px; font-weight: 500;
+      color: rgba(255,255,255,0.7);
+      cursor: pointer; border: none;
+      background: transparent;
+      font-family: 'Inter', sans-serif;
+      border-bottom: 3px solid transparent;
+      transition: all var(--transition);
+    }
+    .filter-pill.active, .filter-pill:hover {
+      color: #fff; border-bottom-color: #fff;
+    }
+
+    /* ── Product Detail Layout ── */
+    .product-wrap {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 36px 24px 80px;
+    }
+
+    /* ── Back link ── */
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-bottom: 24px;
+      transition: color var(--transition);
+    }
+    .back-link:hover { color: var(--text-primary); }
+
+    /* ── Main Image ── */
+    .main-img-wrap {
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      aspect-ratio: 4/3;
+      margin-bottom: 14px;
+      position: relative;
+    }
+    .main-img-wrap img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s ease;
+    }
+    .main-img-wrap:hover img { transform: scale(1.03); }
+    .img-badge {
+      position: absolute;
+      top: 16px; left: 16px;
+      background: rgba(255,255,255,0.9);
+      backdrop-filter: blur(6px);
+      border-radius: 20px;
+      padding: 5px 14px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--golden-bg);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    /* ── Thumbnails ── */
+    .thumbs-row {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 32px;
+    }
+    .thumb {
+      width: 80px; height: 80px;
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+      cursor: pointer;
+      border: 2.5px solid transparent;
+      transition: all var(--transition);
+      flex-shrink: 0;
+    }
+    .thumb:hover, .thumb.active { border-color: var(--golden-bg); }
+    .thumb img { width: 100%; height: 100%; object-fit: cover; }
+
+    /* ── Product Info ── */
+    .product-title {
+      font-family: 'DM Serif Display', serif;
+      font-size: 34px;
+      color: var(--text-primary);
+      margin-bottom: 6px;
+    }
+    .rating-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+    .rating-stars { color: var(--golden); font-size: 16px; letter-spacing: 2px; }
+    .rating-text { font-size: 13px; color: var(--text-muted); }
+    .product-price-big {
+      font-family: 'DM Serif Display', serif;
+      font-size: 38px;
+      color: var(--text-primary);
+      margin-bottom: 22px;
+    }
+
+    /* ── Artisan Card ── */
+    .artisan-card {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--cream-mid);
+      border-radius: var(--radius-md);
+      padding: 16px 20px;
+      margin-bottom: 24px;
+    }
+    .artisan-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .artisan-avatar-lg {
+      width: 52px; height: 52px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2.5px solid var(--parchment);
+    }
+    .artisan-avatar-placeholder-lg {
+      width: 52px; height: 52px;
+      border-radius: 50%;
+      background: var(--golden-bg);
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Playfair Display', serif;
+      font-size: 22px;
+      color: #fff;
+      border: 2.5px solid var(--parchment);
+      flex-shrink: 0;
+    }
+    .artisan-card-label {
+      font-size: 11px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 2px;
+    }
+    .artisan-card-name {
+      font-family: 'Playfair Display', serif;
+      font-size: 17px;
+      font-weight: 600;
+    }
+
+    /* ── Description ── */
+    .desc-label {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 10px;
+    }
+    .desc-text {
+      font-size: 14px;
+      color: var(--text-secondary);
+      line-height: 1.85;
+      margin-bottom: 28px;
+    }
+
+    /* ── Action Buttons ── */
+    .action-row {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 36px;
+    }
+    .action-row .btn {
+      flex: 1;
+      padding: 15px;
+      font-size: 15px;
+    }
+
+    /* ── Divider ── */
+    .section-divider { border: none; border-top: 1px solid rgba(31,17,10,0.08); margin: 0 0 36px; }
+
+    /* ── Reviews Section ── */
+    .reviews-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 24px;
+      margin-bottom: 24px;
+    }
+    .review-card {
+      display: flex;
+      gap: 16px;
+      padding: 22px 0;
+      border-bottom: 1px solid rgba(31,17,10,0.07);
+    }
+    .review-card:last-child { border-bottom: none; }
+    .review-avatar {
+      width: 46px; height: 46px;
+      border-radius: 50%;
+      object-fit: cover;
+      flex-shrink: 0;
+      background: var(--cream-dark);
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Playfair Display', serif;
+      font-size: 18px;
+      color: var(--brown-mid);
+    }
+    .review-name {
+      font-weight: 600;
+      font-size: 14px;
+      margin-bottom: 2px;
+    }
+    .review-meta {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .review-stars { color: var(--golden); font-size: 13px; }
+    .verified-badge {
+      font-size: 10px;
+      background: rgba(154,123,60,0.12);
+      color: var(--golden-bg);
+      padding: 2px 8px;
+      border-radius: 10px;
+      font-weight: 600;
+    }
+    .review-text {
+      font-size: 14px;
+      color: var(--text-secondary);
+      line-height: 1.7;
+    }
+    .review-img {
+      width: 56px; height: 56px;
+      border-radius: var(--radius-sm);
+      object-fit: cover;
+      margin-top: 10px;
+    }
+    .review-right { display: flex; flex-direction: column; gap: 4px; flex: 1; }
+
+    /* ── Sticky Add to Cart (mobile) ── */
+    .sticky-cta {
+      display: none;
+      position: fixed;
+      bottom: 0; left: 0; right: 0;
+      background: var(--cream);
+      border-top: 1px solid rgba(31,17,10,0.1);
+      padding: 16px 24px;
+      z-index: 90;
+      gap: 12px;
+    }
+    @media (max-width: 600px) {
+      .sticky-cta { display: flex; }
+      .action-row { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ── Navigation ── -->
+  <nav class="nav" style="position:sticky;top:0;z-index:100;background:var(--cream);border-bottom:1px solid rgba(31,17,10,0.08);height:75px;display:flex;align-items:center;justify-content:space-between;backdrop-filter:blur(12px);">
+    <a href="index.html" class="nav-logo" style="display:flex; flex-direction:column; align-items:center; gap:2px; text-decoration:none;">
+      <img src="src/assets/logo_transparent.png" alt="AAKAAR Logo" style="height: 46px; width: auto;">
+      <span style="font-family:'Playfair Display',serif;font-size:10px;font-weight:700;letter-spacing:.25em;color:var(--brown-dark);line-height:1;margin-left:3px;">AAKAAR</span>
+    </a>
+    <ul class="nav-links" style="display:flex;align-items:center;gap:28px;list-style:none;">
+      <li><a href="index.html" style="font-size:14px;font-weight:500;color:var(--text-secondary);transition:color .25s;">Home</a></li>
+      <li><a href="artisans.html" style="font-size:14px;font-weight:500;color:var(--text-secondary);transition:color .25s;">Artisans</a></li>
+      <li><a href="market.html" style="font-size:14px;font-weight:500;color:var(--text-primary);">Market</a></li>
+      <li><a href="about.html" style="font-size:14px;font-weight:500;color:var(--text-secondary);transition:color .25s;">About</a></li>
+    </ul>
+    <div style="display:flex;align-items:center;gap:12px;">
+      <div style="display:flex;align-items:center;background:var(--cream-dark);border-radius:20px;padding:3px;gap:2px;">
+        <button onclick="window.location='collector.html'" style="font-size:11px;font-weight:600;padding:4px 12px;border-radius:16px;transition:all .25s;color:var(--text-muted);border:none;background:none;cursor:pointer;font-family:'Inter',sans-serif;">Collect</button>
+        <button onclick="window.location='artisan.html'" style="font-size:11px;font-weight:600;padding:4px 12px;border-radius:16px;background:var(--brown-dark);color:var(--cream);border:none;cursor:pointer;font-family:'Inter',sans-serif;">Sell</button>
+      </div>
+      <button style="width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:transparent;border:none;cursor:pointer;color:var(--text-secondary);">
+        <svg width="17" height="17" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 01-8 0"></path></svg>
+      </button>
+      <a href="login.html" style="width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:transparent;border:none;cursor:pointer;color:var(--text-secondary);text-decoration:none;">
+        <svg width="17" height="17" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+      </a>
+    </div>
+  </nav>
+
+  <!-- ── Filter Bar ── -->
+  <div class="filter-bar">
+    <a href="market.html" class="filter-pill">All</a>
+    <a href="market.html" class="filter-pill">Home Decor</a>
+    <a href="market.html" class="filter-pill active">Jewellery</a>
+    <a href="market.html" class="filter-pill">Wall Art</a>
+    <a href="market.html" class="filter-pill">Interior Decor</a>
+  </div>
+
+  <!-- ── Product Detail ── -->
+  <div class="product-wrap">
+
+    <!-- Back -->
+    <a href="market.html" class="back-link">
+      <svg width="16" height="16" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"></polyline></svg>
+      Back to Jewellery
+    </a>
+
+    <!-- Main Image -->
+    <div class="main-img-wrap animate-fade-in">
+      <img src="images/statement%20choker.jpeg" alt="Statement Choker" id="main-product-img">
+      <div class="img-badge">Jewellery</div>
+    </div>
+
+    <!-- Thumbnails -->
+    <div class="thumbs-row">
+      <div class="thumb active" onclick="setImg('src/assets/craft12.jpg', this)">
+        <img src="src/assets/craft12.jpg" alt="Thumb 1">
+      </div>
+      <div class="thumb" onclick="setImg('src/assets/craft8.jpg', this)">
+        <img src="src/assets/craft8.jpg" alt="Thumb 2">
+      </div>
+      <div class="thumb" onclick="setImg('src/assets/craft11.jpg', this)">
+        <img src="src/assets/craft11.jpg" alt="Thumb 3">
+      </div>
+    </div>
+
+    <!-- Title + Rating -->
+    <h1 class="product-title animate-fade-up">Statement Choker</h1>
+    <div class="rating-row animate-fade-up delay-1">
+      <span class="rating-stars">★★★★★</span>
+      <span class="rating-text">4.9 (82 reviews)</span>
+    </div>
+    <div class="product-price-big animate-fade-up delay-1">₹7,500</div>
+
+    <!-- Artisan Card -->
+    <div class="artisan-card animate-fade-up delay-2">
+      <div class="artisan-left">
+        <div class="artisan-avatar-placeholder-lg">S</div>
+        <div>
+          <div class="artisan-card-label">crafted by</div>
+          <div class="artisan-card-name">sudha paridha</div>
+        </div>
+      </div>
+      <a href="artisans.html" class="btn btn-golden btn-sm">View story</a>
+    </div>
+
+    <!-- Description -->
+    <div class="animate-fade-up delay-3">
+      <div class="desc-label">Description</div>
+      <p class="desc-text">Handcrafted by Sudha Paridha using the ancient Dhokra lost-wax technique, this Statement Choker embodies Day One's tribal heritage through its intricate brass work. No machine can replicate this—it is a living expression of handmade craftsmanship at its very best, storytelling. Each piece gives fair-trade revenue and carries agency and transparency, in addition to the beauty of sustainable, handmade expression.</p>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="action-row animate-fade-up delay-4">
+      <button class="btn btn-outline" onclick="addToCartFn(this)">
+        <svg width="16" height="16" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 01-8 0"></path></svg>
+        Add to cart
+      </button>
+      <button class="btn btn-primary" onclick="buyNow()">Buy now</button>
+    </div>
+
+    <hr class="section-divider">
+
+    <!-- Reviews -->
+    <div class="animate-fade-up delay-5">
+      <h2 class="reviews-title">Reviews</h2>
+
+      <div class="review-card">
+        <div class="review-avatar">M</div>
+        <div class="review-right">
+          <div class="review-name">Meera Iyer</div>
+          <div class="review-meta">
+            <span class="review-stars">★★★★★</span>
+            <span class="verified-badge">Verified Purchase</span>
+          </div>
+          <p class="review-text">Minimal, elegant and meaningful — the packaging alone speaks quality. Everything is exceptional. It feels good supporting something that supports different artisans.</p>
+          <div style="display:flex; gap:8px; margin-top:10px; flex-wrap:wrap;">
+            <img src="src/assets/craft12.jpg" alt="Review photo" class="review-img">
+            <img src="src/assets/craft8.jpg" alt="Review photo 2" class="review-img">
+          </div>
+          <div style="font-size:11px; color:var(--text-muted); margin-top:8px;">Reviewed: Dhokra Figurine · 13 Jun 2025</div>
+        </div>
+      </div>
+
+      <div class="review-card">
+        <div class="review-avatar">S</div>
+        <div class="review-right">
+          <div class="review-name">Surya Nair</div>
+          <div class="review-meta">
+            <span class="review-stars">★★★★★</span>
+            <span class="verified-badge">Verified Purchase</span>
+          </div>
+          <p class="review-text">Timeless decor — Aakaar shows that bonds of craft transcend with Dokra handmade brass through thoughtful and refreshing.</p>
+          <div style="font-size:11px; color:var(--text-muted); margin-top:8px;">Reviewed: Statement Choker · 28 Apr 2025</div>
+        </div>
+      </div>
+
+      <div class="review-card">
+        <div class="review-avatar">P</div>
+        <div class="review-right">
+          <div class="review-name">Priya Mehta</div>
+          <div class="review-meta">
+            <span class="review-stars">★★★★☆</span>
+            <span class="verified-badge">Verified Purchase</span>
+          </div>
+          <p class="review-text">Gorgeous piece! The craftsmanship is unmatched. You can really feel the tradition and soul in every curve of this choker. Received many compliments wearing it.</p>
+          <div style="font-size:11px; color:var(--text-muted); margin-top:8px;">Reviewed: Statement Choker · 02 Mar 2025</div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- ── Sticky Mobile CTA ── -->
+  <div class="sticky-cta">
+    <button class="btn btn-outline" style="flex:1;" onclick="addToCartFn(this)">Add to cart</button>
+    <button class="btn btn-primary" style="flex:1;" onclick="buyNow()">Buy now</button>
+  </div>
+
+  <!-- Cart Toast -->
+  <div id="cart-toast" style="position:fixed;bottom:32px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--brown-dark);color:var(--cream);padding:12px 24px;border-radius:40px;font-size:14px;font-weight:500;z-index:999;opacity:0;transition:all 0.35s cubic-bezier(0.4,0,0.2,1);white-space:nowrap;display:flex;align-items:center;gap:8px;">
+    <svg width="14" height="14" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+    Added to cart!
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const params = new URLSearchParams(window.location.search);
+      const img = params.get('img');
+      const title = params.get('title');
+      const price = params.get('price');
+      const artisan = params.get('artisan');
+      const cat = params.get('cat');
+
+      if(img) document.getElementById('main-product-img').src = img;
+      if(title) {
+        document.querySelector('.product-title').innerText = title;
+        document.title = "AAKAAR \u2014 " + title;
+      }
+      if(price) document.querySelector('.product-price-big').innerText = price;
+      if(artisan) document.querySelector('.artisan-card-name').innerText = artisan.toLowerCase();
+      if(cat) document.querySelector('.img-badge').innerText = cat;
+      
+      // Hide thumbs row if we came from market.html to avoid showing wrong thumbs
+      if(img) {
+        const thumbs = document.querySelector('.thumbs-row');
+        if(thumbs) thumbs.style.display = 'none';
+      }
+    });
+
+    // ── Thumbnails ──
+    function setImg(src, el) {
+      document.getElementById('main-product-img').src = src;
+      document.querySelectorAll('.thumb').forEach(t => t.classList.remove('active'));
+      el.classList.add('active');
+    }
+
+    function addToCartFn(btn) {
+      const orig = btn.innerHTML;
+      btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Added!';
+      const toast = document.getElementById('cart-toast');
+      toast.style.opacity = '1';
+      toast.style.transform = 'translateX(-50%) translateY(0)';
+      setTimeout(() => {
+        btn.innerHTML = orig;
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateX(-50%) translateY(80px)';
+      }, 2500);
+    }
+
+    function buyNow() {
+      alert('Checkout flow coming soon!');
+    }
+  </script>
+
+  <footer class="site-footer">
+    <div class="footer-top">
+      <div class="footer-col">
+        <h4 class="footer-title">QUICK LINKS</h4>
+        <ul class="footer-links">
+          <li><a href="about.html">Our Story</a></li>
+          <li><a href="#">Contact</a></li>
+          <li><a href="#">Blog</a></li>
+          <li><a href="#">Privacy Policy</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4 class="footer-title">INFORMATION</h4>
+        <ul class="footer-links">
+          <li><a href="#">Terms and Conditions</a></li>
+          <li><a href="#">Shipping</a></li>
+          <li><a href="#">Returns</a></li>
+          <li><a href="#">FAQ</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4 class="footer-title">HELP</h4>
+        <ul class="footer-links">
+          <li><span class="footer-text">📞 +91 98765 43210</span></li>
+          <li><span class="footer-text">✉️ archive@kansya.in</span></li>
+          <li><span class="footer-text">🕒 Active (Mon-Sat) 10 AM - 6 PM</span></li>
+        </ul>
+      </div>
+      <div class="footer-newsletter">
+        <h4 class="footer-title">SUBSCRIBE TO OUR NEWSLETTER</h4>
+        <form class="newsletter-form" onsubmit="event.preventDefault();">
+          <input type="email" placeholder="Your e..." required>
+          <button type="submit">SUBSCRIBE</button>
+        </form>
+        <h4 class="footer-title">GIVE US A FOLLOW</h4>
+        <div class="social-icons">
+          <a href="#" class="social-icon">f</a>
+          <a href="#" class="social-icon">x</a>
+          <a href="#" class="social-icon">in</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      &copy; 2026 AAKAAR Dhokra Collective. All rights reserved.
+    </div>
+  </footer>
+
+</body>
+</html>

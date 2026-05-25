@@ -1,0 +1,924 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AAKAAR — From Artisans Hands to your Home</title>
+  <meta name="description" content="AAKAAR connects Dhokra artisans with collectors who care. Discover handcrafted brass creations made using 4000-year-old lost-wax casting traditions.">
+  <link rel="stylesheet" href="src/css/style.css">
+  <style>
+
+    /* ─────────────────────────────────────
+       PAGE WRAPPER — constrained like the fidelity
+    ───────────────────────────────────── */
+    body { background: var(--cream); }
+
+    .home-wrap {
+      max-width: 1140px;
+      margin: 0 auto;
+      padding: 0 0 80px;
+    }
+
+    /* ─────────────────────────────────────
+       NAV
+    ───────────────────────────────────── */
+    .nav {
+      max-width: 1140px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    /* ─────────────────────────────────────
+       HERO SECTION
+    ───────────────────────────────────── */
+    .hero-section {
+      padding: 16px 20px 0;
+    }
+    .hero-img-wrap {
+      border-radius: 20px;
+      overflow: hidden;
+      height: 280px;
+      width: 100%;
+      margin-bottom: 28px;
+      box-shadow: var(--shadow-md);
+      position: relative;
+    }
+    .hero-slide-track {
+      display: flex;
+      width: 500%;
+      height: 100%;
+      transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+    }
+    .hero-slide-track img {
+      width: 20%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center 25%;
+    }
+    .hero-slider-dots {
+      position: absolute;
+      bottom: 16px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 8px;
+      z-index: 10;
+    }
+    .hero-slider-dots .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.4);
+      transition: all 0.3s;
+      cursor: pointer;
+    }
+    .hero-slider-dots .dot.active {
+      background: rgba(255,255,255,0.9);
+      transform: scale(1.2);
+    }
+
+    .hero-text-block {
+      padding: 0 4px;
+      margin-bottom: 24px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      align-items: start;
+    }
+
+    .hero-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 30px;
+      font-weight: 700;
+      line-height: 1.18;
+      color: var(--text-primary);
+    }
+    .hero-title .highlight {
+      color: #3D7A5A;
+      font-style: italic;
+      display: block;
+      margin-top: 2px;
+    }
+
+    .hero-desc {
+      font-size: 13px;
+      color: var(--text-secondary);
+      line-height: 1.75;
+    }
+
+    .hero-buttons {
+      display: flex;
+      gap: 12px;
+      margin-top: 20px;
+      padding: 0 4px;
+      padding-bottom: 32px;
+      border-bottom: 1px solid rgba(31,17,10,0.08);
+    }
+    .hero-btn-primary {
+      background: var(--brown-dark);
+      color: var(--cream);
+      border: none;
+      border-radius: 24px;
+      padding: 10px 22px;
+      font-size: 13px;
+      font-weight: 600;
+      font-family: 'Inter', sans-serif;
+      cursor: pointer;
+      transition: all var(--transition);
+    }
+    .hero-btn-primary:hover {
+      background: var(--brown-deep);
+      transform: translateY(-1px);
+    }
+    .hero-btn-secondary {
+      background: var(--cream-dark);
+      color: var(--text-primary);
+      border: none;
+      border-radius: 24px;
+      padding: 10px 22px;
+      font-size: 13px;
+      font-weight: 600;
+      font-family: 'Inter', sans-serif;
+      cursor: pointer;
+      transition: all var(--transition);
+    }
+    .hero-btn-secondary:hover {
+      background: var(--parchment);
+    }
+
+    /* ─────────────────────────────────────
+       THE COLLECTIONS
+    ───────────────────────────────────── */
+    .collections-section {
+      background: linear-gradient(135deg, #9A7B3C 0%, #7A5E28 100%);
+      border-radius: 24px;
+      margin: 28px 24px;
+      padding: 26px 0 30px;
+      box-shadow: 0 6px 24px rgba(154,123,60,0.3);
+      overflow: hidden;
+    }
+    .collections-header {
+      padding: 0 28px;
+      margin-bottom: 22px;
+    }
+    .collections-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 22px;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 4px;
+    }
+    .collections-sub {
+      font-size: 13px;
+      color: rgba(255,255,255,0.65);
+    }
+
+    .collections-scroll {
+      display: flex;
+      gap: 18px;
+      padding: 4px 28px 8px;
+      overflow-x: auto;
+      scrollbar-width: none;
+      -webkit-overflow-scrolling: touch;
+      scroll-snap-type: x mandatory;
+      align-items: flex-start;
+    }
+    .collections-scroll::-webkit-scrollbar { display: none; }
+    .collections-scroll::after {
+      content: '';
+      min-width: 28px;
+      display: block;
+      flex-shrink: 0;
+    }
+
+    .collection-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      flex-shrink: 0;
+      cursor: pointer;
+      width: 124px;
+      text-decoration: none;
+      scroll-snap-align: start;
+      padding: 4px 0;
+    }
+    .collection-img-wrap {
+      width: 124px;
+      height: 124px;
+      border-radius: 18px;
+      overflow: hidden;
+      border: 2.5px solid rgba(255,255,255,0.3);
+      transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
+      box-shadow: 0 4px 16px rgba(0,0,0,0.28);
+      flex-shrink: 0;
+    }
+    .collection-item:hover .collection-img-wrap,
+    .collection-item:focus-visible .collection-img-wrap {
+      border-color: rgba(255,255,255,0.9);
+      transform: translateY(-5px) scale(1.03);
+      box-shadow: 0 10px 28px rgba(0,0,0,0.38);
+    }
+    .collection-img-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .collection-label {
+      font-size: 11px;
+      font-weight: 700;
+      color: rgba(255,255,255,0.96);
+      text-align: center;
+      line-height: 1.4;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    /* Discover More end tile */
+    .collection-discover {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      flex-shrink: 0;
+      cursor: pointer;
+      width: 124px;
+      text-decoration: none;
+      scroll-snap-align: start;
+      padding: 4px 0;
+    }
+    .collection-discover-box {
+      width: 124px;
+      height: 124px;
+      border-radius: 18px;
+      border: 2.5px dashed rgba(255,255,255,0.55);
+      background: rgba(255,255,255,0.08);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
+      flex-shrink: 0;
+    }
+    .collection-discover:hover .collection-discover-box {
+      background: rgba(255,255,255,0.18);
+      border-color: rgba(255,255,255,0.9);
+      transform: translateY(-5px);
+      box-shadow: 0 10px 28px rgba(0,0,0,0.28);
+    }
+    .collection-discover-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+    }
+    .collection-discover-text {
+      font-size: 12px;
+      font-weight: 700;
+      color: rgba(255,255,255,0.9);
+      text-align: center;
+      line-height: 1.3;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+    .collection-discover-label {
+      font-size: 11px;
+      font-weight: 700;
+      color: rgba(255,255,255,0.96);
+      text-align: center;
+      line-height: 1.4;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    /* ─────────────────────────────────────
+       MEET THE MAKERS
+    ───────────────────────────────────── */
+    .makers-section {
+      padding: 64px 20px 64px;
+    }
+    .makers-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 36px;
+      font-weight: 700;
+      color: var(--text-primary);
+      text-align: center;
+      margin-bottom: 32px;
+    }
+    .makers-row {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+    .maker-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      cursor: pointer;
+      width: 140px;
+    }
+    .maker-avatar {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      overflow: hidden;
+      border: 4px solid var(--parchment);
+      background-color: var(--parchment);
+      transition: all var(--transition);
+    }
+    .maker-item:hover .maker-avatar {
+      border-color: var(--golden);
+      transform: scale(1.06);
+    }
+    .maker-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center 20%;
+      transform: scale(1.25);
+    }
+    .maker-avatar-placeholder {
+      width: 100%;
+      height: 100%;
+      background: var(--golden-bg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Playfair Display', serif;
+      font-size: 24px;
+      color: #fff;
+    }
+    .maker-name {
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      text-align: center;
+      line-height: 1.3;
+    }
+
+    /* ─────────────────────────────────────
+       FEATURE STORY
+    ───────────────────────────────────── */
+    .feature-section {
+      margin: 0 20px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      align-items: center;
+      padding: 64px 0;
+      border-top: 1px solid rgba(31,17,10,0.08);
+      border-bottom: 1px solid rgba(31,17,10,0.08);
+    }
+    .feature-content {}
+    .feature-quote-mark {
+      font-family: 'Playfair Display', serif;
+      font-size: 48px;
+      color: var(--golden);
+      line-height: 0.6;
+      margin-bottom: 8px;
+      display: block;
+    }
+    .feature-label {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: 17px;
+      font-weight: 600;
+      color: var(--text-primary);
+      line-height: 1.35;
+      margin-bottom: 12px;
+    }
+    .feature-desc {
+      font-size: 13px;
+      color: var(--text-secondary);
+      line-height: 1.75;
+      margin-bottom: 16px;
+    }
+    .feature-read-more {
+      display: inline-block;
+      background: var(--cream-dark);
+      color: var(--text-primary);
+      border: none;
+      border-radius: 20px;
+      padding: 9px 20px;
+      font-size: 13px;
+      font-weight: 600;
+      font-family: 'Inter', sans-serif;
+      cursor: pointer;
+      transition: all var(--transition);
+    }
+    .feature-read-more:hover { background: var(--parchment); }
+    .feature-img {
+      border-radius: 16px;
+      overflow: hidden;
+      height: 200px;
+    }
+    .feature-img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    /* ─────────────────────────────────────
+       BEST MONTHLY PICKS
+    ───────────────────────────────────── */
+    .picks-section {
+      padding: 64px 0;
+    }
+    .picks-header {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 32px;
+      padding: 0 20px;
+      position: relative;
+    }
+    .picks-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 32px;
+      font-weight: 700;
+      color: var(--text-primary);
+      text-align: center;
+    }
+    .picks-view-all {
+      font-size: 13px;
+      color: var(--golden);
+      font-weight: 500;
+      transition: color var(--transition);
+      position: absolute;
+      right: 20px;
+    }
+    .picks-view-all:hover { color: var(--olive); }
+
+    .picks-scroll {
+      display: flex;
+      justify-content: center;
+      gap: 44px;
+      overflow-x: auto;
+      scrollbar-width: none;
+      -webkit-overflow-scrolling: touch;
+      padding: 4px 20px 8px;
+      scroll-snap-type: x mandatory;
+    }
+    .picks-scroll::-webkit-scrollbar { display: none; }
+
+    .pick-card {
+      flex-shrink: 0;
+      width: 172px;
+      cursor: pointer;
+      transition: all var(--transition);
+      text-decoration: none;
+      scroll-snap-align: start;
+    }
+    .pick-card:hover { transform: translateY(-5px); }
+    .pick-img {
+      width: 172px;
+      height: 172px;
+      border-radius: 20px;
+      overflow: hidden;
+      margin-bottom: 10px;
+      border: 1px solid rgba(31,17,10,0.07);
+      box-shadow: 0 3px 12px rgba(31,17,10,0.1);
+    }
+    .pick-img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.45s ease;
+      display: block;
+    }
+    .pick-card:hover .pick-img img { transform: scale(1.07); }
+    .pick-name {
+      font-size: 12.5px;
+      font-weight: 600;
+      color: var(--text-primary);
+      line-height: 1.4;
+      text-align: center;
+    }
+
+    /* ─────────────────────────────────────
+       DHOKRA CRAFT BANNER (bottom)
+    ───────────────────────────────────── */
+    .dhokra-banner {
+      margin: 8px 20px 0;
+      background: var(--cream-dark);
+      border-radius: 20px;
+      overflow: hidden;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      min-height: 220px;
+      box-shadow: var(--shadow-sm);
+    }
+    .dhokra-banner-img {
+      overflow: hidden;
+    }
+    .dhokra-banner-img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .dhokra-banner-content {
+      padding: 32px 24px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .dhokra-quote {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--text-primary);
+      line-height: 1.4;
+      margin-bottom: 12px;
+    }
+    .dhokra-quote .dhokra-word {
+      color: var(--golden-bg);
+      font-style: italic;
+    }
+    .dhokra-sub {
+      font-size: 12px;
+      color: var(--text-secondary);
+      line-height: 1.7;
+      margin-bottom: 20px;
+    }
+    .dhokra-btn {
+      display: inline-block;
+      background: var(--brown-dark);
+      color: #fff;
+      border-radius: 24px;
+      padding: 10px 22px;
+      font-size: 13px;
+      font-weight: 600;
+      font-family: 'Inter', sans-serif;
+      border: none;
+      cursor: pointer;
+      width: fit-content;
+      transition: all var(--transition);
+      text-decoration: none;
+    }
+    .dhokra-btn:hover {
+      background: var(--brown-deep);
+      transform: translateY(-1px);
+    }
+
+  </style>
+</head>
+<body>
+
+
+  <!-- ── Navigation ── -->
+  <nav class="nav" style="position:sticky;top:0;z-index:100;background:var(--cream);border-bottom:1px solid rgba(31,17,10,0.08);height:75px;display:flex;align-items:center;justify-content:space-between;backdrop-filter:blur(12px);">
+    <a href="index.html" class="nav-logo" style="display:flex; flex-direction:column; align-items:center; gap:2px; text-decoration:none;">
+      <img src="src/assets/logo_transparent.png" alt="AAKAAR Logo" style="height: 46px; width: auto;">
+      <span style="font-family:'Playfair Display',serif;font-size:10px;font-weight:700;letter-spacing:.25em;color:var(--brown-dark);line-height:1;margin-left:3px;">AAKAAR</span>
+    </a>
+    <ul class="nav-links" style="display:flex;align-items:center;gap:28px;list-style:none;">
+      <li><a href="index.html" style="font-size:14px;font-weight:500;color:var(--text-primary);">Home</a></li>
+      <li><a href="artisans.html" style="font-size:14px;font-weight:500;color:var(--text-secondary);transition:color .25s;">Artisans</a></li>
+      <li><a href="market.html" style="font-size:14px;font-weight:500;color:var(--text-secondary);transition:color .25s;">Market</a></li>
+      <li><a href="about.html" style="font-size:14px;font-weight:500;color:var(--text-secondary);transition:color .25s;">About</a></li>
+    </ul>
+    <div style="display:flex;align-items:center;gap:12px;">
+      <div style="display:flex;align-items:center;background:var(--cream-dark);border-radius:20px;padding:3px;gap:2px;">
+        <button onclick="window.location='collector.html'" style="font-size:11px;font-weight:600;padding:4px 12px;border-radius:16px;transition:all .25s;color:var(--text-muted);border:none;background:none;cursor:pointer;font-family:'Inter',sans-serif;">Collect</button>
+        <button onclick="window.location='artisan.html'" style="font-size:11px;font-weight:600;padding:4px 12px;border-radius:16px;background:var(--brown-dark);color:var(--cream);border:none;cursor:pointer;font-family:'Inter',sans-serif;">Sell</button>
+      </div>
+      <button style="width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:transparent;border:none;cursor:pointer;color:var(--text-secondary);">
+        <svg width="17" height="17" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 01-8 0"></path></svg>
+      </button>
+      <a href="login.html" style="width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:transparent;border:none;cursor:pointer;color:var(--text-secondary);text-decoration:none;">
+        <svg width="17" height="17" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+      </a>
+    </div>
+  </nav>
+
+  <div class="home-wrap">
+
+    <!-- ── HERO ── -->
+    <section class="hero-section animate-fade-up">
+
+      <!-- Hero Image Slideshow -->
+      <div class="hero-img-wrap">
+        <div class="hero-slide-track">
+          <img src="images/craft%20community.jpeg" alt="Slide 1" fetchpriority="high"/>
+          <img src="images/hands%20of%20dhokra%20(dinnnath%20behera).jpeg" alt="Slide 2" loading="lazy"/>
+          <img src="images/dhokra%20ox%20in%20hands.png" alt="Slide 3" loading="lazy" style="object-position: center;"/>
+          <img src="images/hands%20of%20shokra%20(sudha%20paridha).jpeg" alt="Slide 4" loading="lazy"/>
+          <img src="images/craft%20empowerment.jpeg" alt="Slide 5" loading="lazy"/>
+        </div>
+        <div class="hero-slider-dots">
+          <div class="dot active"></div>
+          <div class="dot"></div>
+          <div class="dot"></div>
+          <div class="dot"></div>
+          <div class="dot"></div>
+        </div>
+      </div>
+      
+      <!-- Hero Text -->
+      <div class="hero-text-block">
+        <h1 class="hero-title">
+          From Artisans<br>Hands
+          <span class="highlight">to your Home</span>
+        </h1>
+        <p class="hero-desc">
+          Discover the finest handcrafted Dhokra art directly from master artisans of Odisha, Chhattisgarh, and West Bengal. Each piece is unique, made using a 4,000-year-old lost-wax process that cannot be replicated by machine. Collect something that carries a story.
+        </p>
+      </div>
+
+      <!-- CTA Buttons -->
+      <div class="hero-buttons">
+        <a href="artisans.html"><button class="hero-btn-primary">Explore Artisans</button></a>
+        <a href="market.html"><button class="hero-btn-secondary">Shop Now</button></a>
+      </div>
+    </section>
+
+    <!-- ── THE COLLECTIONS ── -->
+    <section class="collections-section animate-fade-up delay-1">
+      <div class="collections-header">
+        <div class="collections-title">The Collections</div>
+      </div>
+      <div class="collections-scroll">
+        <!-- Item 1 -->
+        <a href="market.html" class="collection-item">
+          <div class="collection-img-wrap">
+            <img src="images/Home%20decor%20figurine.jpg" alt="Home Decor Figures" loading="lazy">
+          </div>
+          <div class="collection-label">Home Decor<br>Figures</div>
+        </a>
+        <!-- Item 2 -->
+        <a href="market.html" class="collection-item">
+          <div class="collection-img-wrap">
+            <img src="images/Brass%20owl%20decor.jpg" alt="Brass Owl Decor" loading="lazy">
+          </div>
+          <div class="collection-label">Brass Owl<br/>Decor</div>
+        </a>
+        <!-- Item 3 -->
+        <a href="market.html" class="collection-item">
+          <div class="collection-img-wrap">
+            <img src="images/traditional%20dhokra(the%20collections).jpg" alt="Traditional Dhokra" loading="lazy">
+          </div>
+          <div class="collection-label">Traditional<br>Dhokra</div>
+        </a>
+        <!-- Item 4 -->
+        <a href="market.html" class="collection-item">
+          <div class="collection-img-wrap">
+            <img src="images/ganesha%20traditional(the%20collections).jpg" alt="Ganesha Tradition" loading="lazy">
+          </div>
+          <div class="collection-label">Ganesha<br>Tradition</div>
+        </a>
+        <!-- Item 5 -->
+        <a href="market.html" class="collection-item">
+          <div class="collection-img-wrap">
+            <img src="images/dhokra%20elephant.jpg" alt="Dhokra Elephant" loading="lazy">
+          </div>
+          <div class="collection-label">Dhokra<br/>Elephant</div>
+        </a>
+        <!-- Item 6 -->
+        <a href="market.html" class="collection-item">
+          <div class="collection-img-wrap">
+            <img src="images/wall%20art(The%20ollections).jpg" alt="Wall Art" loading="lazy">
+          </div>
+          <div class="collection-label">Wall<br>Art</div>
+        </a>
+        <!-- Item 7 -->
+        <a href="market.html" class="collection-item">
+          <div class="collection-img-wrap">
+            <img src="images/brass%20figurine(the%20collections).jpg" alt="Brass Figurines" loading="lazy">
+          </div>
+          <div class="collection-label">Brass<br>Figurines</div>
+        </a>
+        <!-- Item 8 -->
+        <a href="market.html" class="collection-item">
+          <div class="collection-img-wrap">
+            <img src="images/Tribal%20mask(the%20collections).jpg" alt="Tribal Masks" loading="lazy">
+          </div>
+          <div class="collection-label">Tribal<br>Masks</div>
+        </a>
+        <!-- Discover More end tile -->
+        <a href="market.html" class="collection-discover">
+          <div class="collection-discover-box">
+            <div class="collection-discover-icon">
+              <svg width="18" height="18" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+            </div>
+            <div class="collection-discover-text">Discover<br>More</div>
+          </div>
+          <div class="collection-discover-label">Market</div>
+        </a>
+      </div>
+    </section>
+
+    <!-- ── MEET THE MAKERS ── -->
+    <section class="makers-section animate-fade-up delay-2" style="border-top:1px solid rgba(31,17,10,0.08);border-bottom:1px solid rgba(31,17,10,0.08);">
+      <h2 class="makers-title">Meet the Makers</h2>
+      <div class="makers-row">
+        <a href="artisans.html" class="maker-item">
+          <div class="maker-avatar">
+            <img src="images/Sudha%20paridha.png" alt="Sudha Paridha" loading="lazy">
+          </div>
+          <div class="maker-name">Sudha Paridha</div>
+        </a>
+        <a href="artisans.html" class="maker-item">
+          <div class="maker-avatar">
+            <img src="images/Raghunath%20Behera.png" alt="Raghunath Behera" loading="lazy">
+          </div>
+          <div class="maker-name">Raghunath Behera</div>
+        </a>
+        <a href="artisans.html" class="maker-item">
+          <div class="maker-avatar">
+            <img src="images/Basindhar%20Behera.png" alt="Basindhar Karmakar" loading="lazy">
+          </div>
+          <div class="maker-name">Basindhar Karmakar</div>
+        </a>
+        <a href="artisans.html" class="maker-item">
+          <div class="maker-avatar">
+            <img src="images/Dignnath%20Behera.png" alt="Dinnath Behera" loading="lazy">
+          </div>
+          <div class="maker-name">Dinnath Behera</div>
+        </a>
+      </div>
+    </section>
+
+    <!-- ── FEATURE STORY ── -->
+    <section class="feature-section animate-fade-up delay-3">
+      <div class="feature-content">
+        <div style="font-family:'Playfair Display',serif;font-style:italic;font-size:19px;font-weight:700;color:var(--golden);line-height:1;margin-bottom:6px;">'Feature Story:</div>
+        <div class="feature-label" style="margin-top:0;">The Artisan Behind<br>the Craft'</div>
+        <p class="feature-desc">Discover the hopes, heritage, skill, and passion that bring every Dhokra creation to life.</p>
+        <a href="about.html"><button class="feature-read-more">Read More</button></a>
+      </div>
+      <div class="feature-img">
+        <img src="src/assets/craft5.jpg" alt="Artisan hands with wax" loading="lazy">
+      </div>
+    </section>
+
+    <!-- ── BEST MONTHLY PICKS ── -->
+    <section class="picks-section animate-fade-up delay-4">
+      <div class="picks-header">
+        <h2 class="picks-title">Best Monthly Picks</h2>
+        <a href="market.html" class="picks-view-all">View More →</a>
+      </div>
+      <div class="picks-scroll">
+        <a href="product.html" class="pick-card">
+          <div class="pick-img">
+            <img src="images/Tribal%20home%20decor(best%20monthly%20pick).jpeg" alt="Tribal home decor" loading="lazy">
+          </div>
+          <div class="pick-name">Tribal home decor</div>
+        </a>
+        <a href="product.html" class="pick-card">
+          <div class="pick-img">
+            <img src="images/traditional%20table%20piece(best%20monthly%20pick).png" alt="Traditional table piece" loading="lazy">
+          </div>
+          <div class="pick-name">Traditional table piece</div>
+        </a>
+        <a href="product.html" class="pick-card">
+          <div class="pick-img">
+            <img src="images/wall%20art(The%20ollections).jpg" alt="Wall decor" loading="lazy">
+          </div>
+          <div class="pick-name">Wall decor</div>
+        </a>
+        <a href="product.html" class="pick-card">
+          <div class="pick-img">
+            <img src="images/devi%20ma%20sculpture.jpeg" alt="Devi ma sculpture" loading="lazy">
+          </div>
+          <div class="pick-name">Devi ma sculpture</div>
+        </a>
+      </div>
+    </section>
+
+    <!-- ── DHOKRA CRAFT BOTTOM BANNER ── -->
+    <section class="dhokra-banner animate-fade-up delay-5">
+      <div class="dhokra-banner-img">
+        <img src="src/assets/craft7.jpg" alt="Dhokra wax craft process" loading="lazy">
+      </div>
+      <div class="dhokra-banner-content">
+        <div class="dhokra-quote">
+          "<span class="dhokra-word">Dhokra Craft:<br></span>
+          An Ancient Lost-Wax<br>Legacy Cast in<br>Time"
+        </div>
+        <p class="dhokra-sub">Explore the history, process, and tribal heritage behind every piece.</p>
+        <a href="about.html" class="dhokra-btn">Know More</a>
+      </div>
+    </section>
+
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const navLinks = document.querySelectorAll('.nav-links a');
+      navLinks.forEach(link => {
+        if (link.getAttribute('href') === 'index.html') {
+          link.style.color = 'var(--text-primary)';
+          link.style.fontWeight = '600';
+        }
+      });
+
+      // Hero Slideshow logic (Puma style swipe)
+      const slideTrack = document.querySelector('.hero-slide-track');
+      const dots = document.querySelectorAll('.hero-slider-dots .dot');
+      if (slideTrack && dots.length > 0) {
+        let currentSlide = 0;
+        const totalSlides = 5;
+        
+        function goToSlide(index) {
+          currentSlide = index;
+          slideTrack.style.transform = `translateX(-${currentSlide * 20}%)`;
+          dots.forEach(d => d.classList.remove('active'));
+          dots[currentSlide].classList.add('active');
+        }
+
+        let slideInterval = setInterval(() => {
+          goToSlide((currentSlide + 1) % totalSlides);
+        }, 4000);
+
+        dots.forEach((dot, index) => {
+          dot.addEventListener('click', () => {
+            clearInterval(slideInterval);
+            goToSlide(index);
+            slideInterval = setInterval(() => {
+              goToSlide((currentSlide + 1) % totalSlides);
+            }, 4000);
+          });
+        });
+
+        // Touch swipe support
+        let startX = 0;
+        slideTrack.addEventListener('touchstart', e => {
+          startX = e.touches[0].clientX;
+        }, {passive: true});
+        
+        slideTrack.addEventListener('touchend', e => {
+          const endX = e.changedTouches[0].clientX;
+          if (startX - endX > 50) {
+            clearInterval(slideInterval);
+            goToSlide((currentSlide + 1) % totalSlides);
+            slideInterval = setInterval(() => goToSlide((currentSlide + 1) % totalSlides), 4000);
+          } else if (endX - startX > 50) {
+            clearInterval(slideInterval);
+            goToSlide((currentSlide - 1 + totalSlides) % totalSlides);
+            slideInterval = setInterval(() => goToSlide((currentSlide + 1) % totalSlides), 4000);
+          }
+        }, {passive: true});
+      }
+    });
+  </script>
+
+  <footer class="site-footer">
+    <div class="footer-top">
+      <div class="footer-col">
+        <h4 class="footer-title">QUICK LINKS</h4>
+        <ul class="footer-links">
+          <li><a href="about.html">Our Story</a></li>
+          <li><a href="#">Contact</a></li>
+          <li><a href="#">Blog</a></li>
+          <li><a href="#">Privacy Policy</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4 class="footer-title">INFORMATION</h4>
+        <ul class="footer-links">
+          <li><a href="#">Terms and Conditions</a></li>
+          <li><a href="#">Shipping</a></li>
+          <li><a href="#">Returns</a></li>
+          <li><a href="#">FAQ</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4 class="footer-title">HELP</h4>
+        <ul class="footer-links">
+          <li><span class="footer-text">📞 +91 98765 43210</span></li>
+          <li><span class="footer-text">✉️ archive@kansya.in</span></li>
+          <li><span class="footer-text">🕒 Active (Mon-Sat) 10 AM - 6 PM</span></li>
+        </ul>
+      </div>
+      <div class="footer-newsletter">
+        <h4 class="footer-title">SUBSCRIBE TO OUR NEWSLETTER</h4>
+        <form class="newsletter-form" onsubmit="event.preventDefault();">
+          <input type="email" placeholder="Your e..." required>
+          <button type="submit">SUBSCRIBE</button>
+        </form>
+        <h4 class="footer-title">GIVE US A FOLLOW</h4>
+        <div class="social-icons">
+          <a href="#" class="social-icon">f</a>
+          <a href="#" class="social-icon">x</a>
+          <a href="#" class="social-icon">in</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      &copy; 2026 AAKAAR Dhokra Collective. All rights reserved.
+    </div>
+  </footer>
+
+</body>
+</html>

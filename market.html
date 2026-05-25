@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AAKAAR — Market · Discover Dhokra Craft</title>
+  <meta name="description" content="Browse handcrafted Dhokra pieces — jewellery, home decor, wall art and interior pieces made by master artisans.">
+  <link rel="stylesheet" href="src/css/style.css">
+  <style>
+    /* ── Category Filter Bar ── */
+    .filter-bar {
+      background: var(--golden-bg);
+      padding: 0 24px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .filter-bar::-webkit-scrollbar { display: none; }
+    .filter-pill {
+      white-space: nowrap;
+      padding: 10px 20px;
+      border-radius: 0;
+      font-size: 14px;
+      font-weight: 500;
+      color: rgba(255,255,255,0.7);
+      cursor: pointer;
+      border: none;
+      background: transparent;
+      font-family: 'Inter', sans-serif;
+      border-bottom: 3px solid transparent;
+      transition: all var(--transition);
+    }
+    .filter-pill.active,
+    .filter-pill:hover {
+      color: #fff;
+      border-bottom-color: #fff;
+    }
+
+    /* ── Page Layout ── */
+    .market-wrap {
+      max-width: 1140px;
+      margin: 0 auto;
+      padding: 40px 24px 80px;
+    }
+
+    .market-header {
+      margin-bottom: 36px;
+    }
+    .market-header h1 {
+      font-family: 'DM Serif Display', serif;
+      font-size: 42px;
+      color: var(--text-primary);
+      margin-bottom: 8px;
+    }
+    .market-header p {
+      font-size: 15px;
+      color: var(--text-muted);
+    }
+    .market-top-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-bottom: 32px;
+    }
+
+    /* ── Sort / Filter Controls ── */
+    .sort-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .sort-select {
+      background: var(--cream-mid);
+      border: 1.5px solid var(--parchment);
+      border-radius: 20px;
+      padding: 8px 16px;
+      font-size: 13px;
+      font-family: 'Inter', sans-serif;
+      color: var(--text-secondary);
+      outline: none;
+      cursor: pointer;
+    }
+    .sort-select:focus { border-color: var(--golden); }
+
+    /* ── Products Grid ── */
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+    }
+
+    @media (min-width: 600px) {
+      .products-grid { grid-template-columns: repeat(3, 1fr); }
+    }
+    @media (min-width: 900px) {
+      .products-grid { grid-template-columns: repeat(4, 1fr); }
+    }
+
+    .product-card {
+      background: var(--cream-mid);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      cursor: pointer;
+      transition: all var(--transition);
+      text-decoration: none;
+      display: block;
+    }
+    .product-card:hover {
+      transform: translateY(-6px);
+      box-shadow: var(--shadow-lg);
+    }
+    .product-img-wrap {
+      position: relative;
+      aspect-ratio: 1;
+      overflow: hidden;
+    }
+    .product-img-wrap img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s ease;
+    }
+    .product-card:hover .product-img-wrap img { transform: scale(1.08); }
+
+    .wishlist-btn {
+      position: absolute;
+      top: 10px; right: 10px;
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.85);
+      backdrop-filter: blur(4px);
+      display: flex; align-items: center; justify-content: center;
+      border: none; cursor: pointer;
+      transition: all var(--transition);
+      color: var(--text-muted);
+    }
+    .wishlist-btn:hover, .wishlist-btn.liked {
+      background: #fff;
+      color: #c0392b;
+    }
+    .wishlist-btn.liked svg { fill: #c0392b; stroke: #c0392b; }
+
+    .product-info {
+      padding: 14px 16px 18px;
+    }
+    .product-name {
+      font-family: 'Playfair Display', serif;
+      font-size: 16px;
+      margin-bottom: 2px;
+      color: var(--text-primary);
+    }
+    .product-by {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-bottom: 10px;
+    }
+    .product-price-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .product-price {
+      font-family: 'Playfair Display', serif;
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+    .product-price span {
+      font-size: 13px;
+      font-weight: 400;
+      color: var(--text-muted);
+      font-family: 'Inter', sans-serif;
+    }
+    .cart-btn {
+      width: 34px; height: 34px;
+      border-radius: 50%;
+      background: var(--brown-dark);
+      color: #fff;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px; line-height: 1;
+      border: none; cursor: pointer;
+      transition: all var(--transition);
+    }
+    .cart-btn:hover { background: var(--golden-bg); transform: scale(1.1); }
+
+    /* ── Load More ── */
+    .load-more-wrap {
+      text-align: center;
+      margin-top: 48px;
+    }
+
+    /* ── Empty State ── */
+    .empty-state {
+      text-align: center;
+      padding: 80px 0;
+      display: none;
+    }
+    .empty-state svg { color: var(--parchment); margin: 0 auto 16px; }
+    .empty-state p { color: var(--text-muted); font-size: 15px; }
+  </style>
+</head>
+<body>
+
+  <!-- ── Navigation ── -->
+  <nav class="nav" style="position:sticky;top:0;z-index:100;background:var(--cream);border-bottom:1px solid rgba(31,17,10,0.08);height:75px;display:flex;align-items:center;justify-content:space-between;backdrop-filter:blur(12px);">
+    <a href="index.html" class="nav-logo" style="display:flex; flex-direction:column; align-items:center; gap:2px; text-decoration:none;">
+      <img src="src/assets/logo_transparent.png" alt="AAKAAR Logo" style="height: 46px; width: auto;">
+      <span style="font-family:'Playfair Display',serif;font-size:10px;font-weight:700;letter-spacing:.25em;color:var(--brown-dark);line-height:1;margin-left:3px;">AAKAAR</span>
+    </a>
+    <ul class="nav-links" style="display:flex;align-items:center;gap:28px;list-style:none;">
+      <li><a href="index.html" style="font-size:14px;font-weight:500;color:var(--text-secondary);transition:color .25s;">Home</a></li>
+      <li><a href="artisans.html" style="font-size:14px;font-weight:500;color:var(--text-secondary);transition:color .25s;">Artisans</a></li>
+      <li><a href="market.html" style="font-size:14px;font-weight:500;color:var(--text-primary);">Market</a></li>
+      <li><a href="about.html" style="font-size:14px;font-weight:500;color:var(--text-secondary);transition:color .25s;">About</a></li>
+    </ul>
+    <div style="display:flex;align-items:center;gap:12px;">
+      <div style="display:flex;align-items:center;background:var(--cream-dark);border-radius:20px;padding:3px;gap:2px;">
+        <button onclick="window.location='collector.html'" style="font-size:11px;font-weight:600;padding:4px 12px;border-radius:16px;transition:all .25s;color:var(--text-muted);border:none;background:none;cursor:pointer;font-family:'Inter',sans-serif;">Collect</button>
+        <button onclick="window.location='artisan.html'" style="font-size:11px;font-weight:600;padding:4px 12px;border-radius:16px;background:var(--brown-dark);color:var(--cream);border:none;cursor:pointer;font-family:'Inter',sans-serif;">Sell</button>
+      </div>
+      <button style="width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:transparent;border:none;cursor:pointer;color:var(--text-secondary);">
+        <svg width="17" height="17" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 01-8 0"></path></svg>
+      </button>
+      <a href="login.html" style="width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:transparent;border:none;cursor:pointer;color:var(--text-secondary);text-decoration:none;">
+        <svg width="17" height="17" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+      </a>
+    </div>
+  </nav>
+
+  <!-- ── Category Filter Bar ── -->
+  <div class="filter-bar" id="filter-bar">
+    <button class="filter-pill active" data-cat="all">All</button>
+    <button class="filter-pill" data-cat="home-decor">Home Decor</button>
+    <button class="filter-pill" data-cat="jewellery">Jewellery</button>
+    <button class="filter-pill" data-cat="wall-art">Wall Art</button>
+    <button class="filter-pill" data-cat="interior">Interior Decor</button>
+  </div>
+
+  <!-- ── Main Content ── -->
+  <div class="market-wrap">
+
+    <div class="market-top-row">
+      <div class="market-header" style="margin-bottom:0;">
+        <h1 id="category-title">All</h1>
+        <p id="category-desc">Handcrafted Dhokra pieces from master artisans across India</p>
+      </div>
+      <div class="sort-row">
+        <select class="sort-select" onchange="sortProducts(this.value)">
+          <option value="featured">Featured</option>
+          <option value="price-low">Price: Low to High</option>
+          <option value="price-high">Price: High to Low</option>
+          <option value="newest">Newest</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Products Grid -->
+    <div class="products-grid" id="products-grid">
+
+      <!-- Jewellery -->
+      <a href="product.html" class="product-card animate-fade-up delay-1" data-cat="jewellery">
+        <div class="product-img-wrap">
+          <img src="images/dhokra%20brass%20earring.png" alt="Dhokra Brass Earring" loading="lazy">
+          <button class="wishlist-btn" onclick="toggleWish(event,this)">
+            <svg width="14" height="14" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"></path></svg>
+          </button>
+        </div>
+        <div class="product-info">
+          <div class="product-name">Dhokra Brass Earring</div>
+          <div class="product-by">by Lakshmi Parida</div>
+          <div class="product-price-row">
+            <div class="product-price">₹3,500</div>
+            <button class="cart-btn" onclick="addToCart(event)">+</button>
+          </div>
+        </div>
+      </a>
+
+      <a href="product.html" class="product-card animate-fade-up delay-2" data-cat="jewellery">
+        <div class="product-img-wrap">
+          <img src="images/handcrafted%20bangle.png" alt="Handcrafted Bangles" loading="lazy">
+          <button class="wishlist-btn" onclick="toggleWish(event,this)">
+            <svg width="14" height="14" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"></path></svg>
+          </button>
+        </div>
+        <div class="product-info">
+          <div class="product-name">Handcrafted Bangles</div>
+          <div class="product-by">by Sudha Paridha</div>
+          <div class="product-price-row">
+            <div class="product-price">₹5,000</div>
+            <button class="cart-btn" onclick="addToCart(event)">+</button>
+          </div>
+        </div>
+      </a>
+
+      <a href="product.html" class="product-card animate-fade-up delay-3" data-cat="jewellery">
+        <div class="product-img-wrap">
+          <img src="images/statement%20choker.jpeg" alt="Statement Choker" loading="lazy">
+          <button class="wishlist-btn" onclick="toggleWish(event,this)">
+            <svg width="14" height="14" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"></path></svg>
+          </button>
+        </div>
+        <div class="product-info">
+          <div class="product-name">Statement Choker</div>
+          <div class="product-by">by Sudha Paridha</div>
+          <div class="product-price-row">
+            <div class="product-price">₹7,500</div>
+            <button class="cart-btn" onclick="addToCart(event)">+</button>
+          </div>
+        </div>
+      </a>
+
+      <a href="product.html" class="product-card animate-fade-up delay-4" data-cat="jewellery">
+        <div class="product-img-wrap">
+          <img src="images/leaf%20earrings.png" alt="Mulberry Hoop Earrings" loading="lazy">
+          <button class="wishlist-btn" onclick="toggleWish(event,this)">
+            <svg width="14" height="14" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"></path></svg>
+          </button>
+        </div>
+        <div class="product-info">
+          <div class="product-name">Mulberry Hoop Earrings</div>
+          <div class="product-by">by Sudha Paridha</div>
+          <div class="product-price-row">
+            <div class="product-price">₹4,000</div>
+            <button class="cart-btn" onclick="addToCart(event)">+</button>
+          </div>
+        </div>
+      </a>
+
+      <a href="product.html" class="product-card animate-fade-up delay-1" data-cat="jewellery">
+        <div class="product-img-wrap">
+          <img src="images/tribal%20pendant%20necklace.png" alt="Tribal Pendant Necklace" loading="lazy">
+          <button class="wishlist-btn" onclick="toggleWish(event,this)">
+            <svg width="14" height="14" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"></path></svg>
+          </button>
+        </div>
+        <div class="product-info">
+          <div class="product-name">Tribal Pendant Necklace</div>
+          <div class="product-by">by Sudha Paridha</div>
+          <div class="product-price-row">
+            <div class="product-price">₹8,000</div>
+            <button class="cart-btn" onclick="addToCart(event)">+</button>
+          </div>
+        </div>
+      </a>
+
+      <a href="product.html" class="product-card animate-fade-up delay-2" data-cat="jewellery">
+        <div class="product-img-wrap">
+          <img src="images/brass%20moonlight%20ring.png" alt="Brass Moonlight Ring" loading="lazy">
+          <button class="wishlist-btn" onclick="toggleWish(event,this)">
+            <svg width="14" height="14" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"></path></svg>
+          </button>
+        </div>
+        <div class="product-info">
+          <div class="product-name">Brass Moonlight Ring</div>
+          <div class="product-by">by Sudha Paridha</div>
+          <div class="product-price-row">
+            <div class="product-price">₹3,000</div>
+            <button class="cart-btn" onclick="addToCart(event)">+</button>
+          </div>
+        </div>
+      </a>
+
+      <!-- Home Decor -->
+      <a href="product.html" class="product-card animate-fade-up delay-3" data-cat="home-decor">
+        <div class="product-img-wrap">
+          <img src="images/Dancing%20Ganesha.jpg" alt="Dancing Ganesha" loading="lazy">
+          <button class="wishlist-btn" onclick="toggleWish(event,this)">
+            <svg width="14" height="14" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"></path></svg>
+          </button>
+        </div>
+        <div class="product-info">
+          <div class="product-name">Dancing Ganesha</div>
+          <div class="product-by">by Dinnath Behera</div>
+          <div class="product-price-row">
+            <div class="product-price">₹12,000</div>
+            <button class="cart-btn" onclick="addToCart(event)">+</button>
+          </div>
+        </div>
+      </a>
+
+      <a href="product.html" class="product-card animate-fade-up delay-4" data-cat="home-decor">
+        <div class="product-img-wrap">
+          <img src="images/Tribal%20horse%20figurine.jpg" alt="Tribal Horse Figurine" loading="lazy">
+          <button class="wishlist-btn" onclick="toggleWish(event,this)">
+            <svg width="14" height="14" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"></path></svg>
+          </button>
+        </div>
+        <div class="product-info">
+          <div class="product-name">Tribal Horse Figurine</div>
+          <div class="product-by">by Basindhar Karmakar</div>
+          <div class="product-price-row">
+            <div class="product-price">₹9,500</div>
+            <button class="cart-btn" onclick="addToCart(event)">+</button>
+          </div>
+        </div>
+      </a>
+
+      <!-- Wall Art -->
+      <a href="product.html" class="product-card animate-fade-up delay-1" data-cat="wall-art">
+        <div class="product-img-wrap">
+          <img src="images/wall%20panel%20square.jpg" alt="Dokra Wall Panel" loading="lazy">
+          <button class="wishlist-btn" onclick="toggleWish(event,this)">
+            <svg width="14" height="14" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"></path></svg>
+          </button>
+        </div>
+        <div class="product-info">
+          <div class="product-name">Dokra Wall Panel</div>
+          <div class="product-by">by Basindhar Karmakar</div>
+          <div class="product-price-row">
+            <div class="product-price">₹14,500</div>
+            <button class="cart-btn" onclick="addToCart(event)">+</button>
+          </div>
+        </div>
+      </a>
+
+      <a href="product.html" class="product-card animate-fade-up delay-2" data-cat="interior">
+        <div class="product-img-wrap">
+          <img src="images/Brass%20owl%20decor.jpg" alt="Brass Owl Decor" loading="lazy">
+          <button class="wishlist-btn" onclick="toggleWish(event,this)">
+            <svg width="14" height="14" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"></path></svg>
+          </button>
+        </div>
+        <div class="product-info">
+          <div class="product-name">Brass Owl Decor</div>
+          <div class="product-by">by Dinnath Behera</div>
+          <div class="product-price-row">
+            <div class="product-price">₹6,000</div>
+            <button class="cart-btn" onclick="addToCart(event)">+</button>
+          </div>
+        </div>
+      </a>
+
+      <!-- More added options for all categories -->
+      <a href="product.html" class="product-card animate-fade-up delay-3" data-cat="jewellery">
+        <div class="product-img-wrap">
+          <img src="images/Tribal%20brass%20necklace.jpg" alt="Tribal Brass Necklace" loading="lazy">
+          <button class="wishlist-btn" onclick="toggleWish(event,this)">
+            <svg width="14" height="14" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"></path></svg>
+          </button>
+        </div>
+        <div class="product-info">
+          <div class="product-name">Tribal Brass Necklace</div>
+          <div class="product-by">by Sudha Paridha</div>
+          <div class="product-price-row">
+            <div class="product-price">₹6,500</div>
+            <button class="cart-btn" onclick="addToCart(event)">+</button>
+          </div>
+        </div>
+      </a>
+
+      <a href="product.html" class="product-card animate-fade-up delay-4" data-cat="home-decor">
+        <div class="product-img-wrap">
+          <img src="images/dhokra%20elephant.jpg" alt="Dhokra Elephant" loading="lazy">
+          <button class="wishlist-btn" onclick="toggleWish(event,this)">
+            <svg width="14" height="14" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"></path></svg>
+          </button>
+        </div>
+        <div class="product-info">
+          <div class="product-name">Dhokra Elephant</div>
+          <div class="product-by">by Raghunath Behera</div>
+          <div class="product-price-row">
+            <div class="product-price">₹8,500</div>
+            <button class="cart-btn" onclick="addToCart(event)">+</button>
+          </div>
+        </div>
+      </a>
+
+      <a href="product.html" class="product-card animate-fade-up delay-1" data-cat="wall-art">
+        <div class="product-img-wrap">
+          <img src="images/tribal%20motif%20panel.jpg" alt="Tribal Motif Panel" loading="lazy">
+          <button class="wishlist-btn" onclick="toggleWish(event,this)">
+            <svg width="14" height="14" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"></path></svg>
+          </button>
+        </div>
+        <div class="product-info">
+          <div class="product-name">Tribal Motif Panel</div>
+          <div class="product-by">by Basindhar Karmakar</div>
+          <div class="product-price-row">
+            <div class="product-price">₹13,000</div>
+            <button class="cart-btn" onclick="addToCart(event)">+</button>
+          </div>
+        </div>
+      </a>
+
+      <a href="product.html" class="product-card animate-fade-up delay-2" data-cat="interior">
+        <div class="product-img-wrap">
+          <img src="images/Brass%20lantern.jpg" alt="Brass Lantern" loading="lazy">
+          <button class="wishlist-btn" onclick="toggleWish(event,this)">
+            <svg width="14" height="14" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"></path></svg>
+          </button>
+        </div>
+        <div class="product-info">
+          <div class="product-name">Brass Lantern</div>
+          <div class="product-by">by Dinnath Behera</div>
+          <div class="product-price-row">
+            <div class="product-price">₹11,000</div>
+            <button class="cart-btn" onclick="addToCart(event)">+</button>
+          </div>
+        </div>
+      </a>
+
+      <a href="product.html" class="product-card animate-fade-up delay-3" data-cat="home-decor">
+        <div class="product-img-wrap">
+          <img src="images/Peacock%20decor(home%20decor).jpg" alt="Peacock Decor" loading="lazy">
+          <button class="wishlist-btn" onclick="toggleWish(event,this)">
+            <svg width="14" height="14" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"></path></svg>
+          </button>
+        </div>
+        <div class="product-info">
+          <div class="product-name">Peacock Decor</div>
+          <div class="product-by">by Raghunath Behera</div>
+          <div class="product-price-row">
+            <div class="product-price">₹7,500</div>
+            <button class="cart-btn" onclick="addToCart(event)">+</button>
+          </div>
+        </div>
+      </a>
+
+      <a href="product.html" class="product-card animate-fade-up delay-4" data-cat="jewellery">
+        <div class="product-img-wrap">
+          <img src="images/brass%20cuffs.jpg" alt="Artisan Brass Cuffs" loading="lazy">
+          <button class="wishlist-btn" onclick="toggleWish(event,this)">
+            <svg width="14" height="14" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"></path></svg>
+          </button>
+        </div>
+        <div class="product-info">
+          <div class="product-name">Artisan Brass Cuffs</div>
+          <div class="product-by">by Sudha Paridha</div>
+          <div class="product-price-row">
+            <div class="product-price">₹5,500</div>
+            <button class="cart-btn" onclick="addToCart(event)">+</button>
+          </div>
+        </div>
+      </a>
+
+      <a href="product.html" class="product-card animate-fade-up delay-1" data-cat="wall-art">
+        <div class="product-img-wrap">
+          <img src="images/Sundisk%20wall%20art.jpg" alt="Sun Disk Wall Art" loading="lazy">
+          <button class="wishlist-btn" onclick="toggleWish(event,this)">
+            <svg width="14" height="14" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"></path></svg>
+          </button>
+        </div>
+        <div class="product-info">
+          <div class="product-name">Sun Disk Wall Art</div>
+          <div class="product-by">by Basindhar Karmakar</div>
+          <div class="product-price-row">
+            <div class="product-price">₹16,500</div>
+            <button class="cart-btn" onclick="addToCart(event)">+</button>
+          </div>
+        </div>
+      </a>
+      
+    </div>
+
+    <!-- Load More -->
+    <div class="load-more-wrap">
+      <button class="btn btn-outline" style="padding:14px 40px;" onclick="this.textContent='Loading…'">Load more pieces</button>
+    </div>
+
+  </div>
+
+  <!-- ── Cart Toast ── -->
+  <div id="cart-toast" style="position:fixed;bottom:32px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--brown-dark);color:var(--cream);padding:12px 24px;border-radius:40px;font-size:14px;font-weight:500;z-index:999;opacity:0;transition:all 0.35s cubic-bezier(0.4,0,0.2,1);white-space:nowrap;display:flex;align-items:center;gap:8px;">
+    <svg width="14" height="14" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+    Added to cart!
+  </div>
+
+  <script>
+    // ── Filter ──
+    const pills = document.querySelectorAll('.filter-pill');
+    const cards = document.querySelectorAll('.product-card[data-cat]');
+    const catTitle = document.getElementById('category-title');
+    const catDesc  = document.getElementById('category-desc');
+
+    const catMeta = {
+      'all':        { title: 'All',           desc: 'Handcrafted Dhokra pieces from master artisans across India' },
+      'jewellery':  { title: 'Jewellery',      desc: 'Brass & mixed-metal jewellery made using ancient lost-wax casting' },
+      'home-decor': { title: 'Home Decor',     desc: 'Bring living tradition into your home with handcast figurines' },
+      'wall-art':   { title: 'Wall Art',       desc: 'One-of-a-kind wall panels and decorative art in Dhokra brass' },
+      'interior':   { title: 'Interior Decor', desc: 'Statement interior pieces that carry stories of living craft' },
+    };
+
+    pills.forEach(pill => {
+      pill.addEventListener('click', () => {
+        pills.forEach(p => p.classList.remove('active'));
+        pill.classList.add('active');
+        const cat = pill.dataset.cat;
+        catTitle.textContent = catMeta[cat].title;
+        catDesc.textContent  = catMeta[cat].desc;
+        cards.forEach(card => {
+          card.style.display = (cat === 'all' || card.dataset.cat === cat) ? '' : 'none';
+        });
+      });
+    });
+
+    // ── Wishlist ──
+    function toggleWish(e, btn) {
+      e.preventDefault();
+      e.stopPropagation();
+      btn.classList.toggle('active');
+    }
+
+    // Attach click listeners immediately (DOM already loaded at bottom of body)
+    (function() {
+      const cards = document.querySelectorAll('.product-card');
+      cards.forEach(card => {
+        card.addEventListener('click', (e) => {
+          // don't navigate if wishlist or cart was clicked
+          if(e.target.closest('.wishlist-btn') || e.target.closest('.cart-btn')) return;
+          e.preventDefault();
+          
+          const img = card.querySelector('img').getAttribute('src');
+          const title = card.querySelector('.product-name').innerText;
+          const price = card.querySelector('.product-price').innerText;
+          const artisan = card.querySelector('.product-by') ? card.querySelector('.product-by').innerText.replace('by ', '') : '';
+          const cat = card.getAttribute('data-cat') || 'Craft';
+          
+          const params = new URLSearchParams({
+            img: img,
+            title: title,
+            price: price,
+            artisan: artisan,
+            cat: cat
+          });
+          
+          window.location.href = 'product.html?' + params.toString();
+        });
+      });
+    })();
+
+    // ── Add to Cart ──
+    function addToCart(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      const toast = document.getElementById('cart-toast');
+      toast.style.opacity = '1';
+      toast.style.transform = 'translateX(-50%) translateY(0)';
+      clearTimeout(window._cartTimer);
+      window._cartTimer = setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateX(-50%) translateY(80px)';
+      }, 2500);
+    }
+
+    // ── Sort ──
+    function sortProducts(val) {
+      // Visual feedback only for demo
+    }
+  </script>
+
+  <footer class="site-footer">
+    <div class="footer-top">
+      <div class="footer-col">
+        <h4 class="footer-title">QUICK LINKS</h4>
+        <ul class="footer-links">
+          <li><a href="about.html">Our Story</a></li>
+          <li><a href="#">Contact</a></li>
+          <li><a href="#">Blog</a></li>
+          <li><a href="#">Privacy Policy</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4 class="footer-title">INFORMATION</h4>
+        <ul class="footer-links">
+          <li><a href="#">Terms and Conditions</a></li>
+          <li><a href="#">Shipping</a></li>
+          <li><a href="#">Returns</a></li>
+          <li><a href="#">FAQ</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4 class="footer-title">HELP</h4>
+        <ul class="footer-links">
+          <li><span class="footer-text">📞 +91 98765 43210</span></li>
+          <li><span class="footer-text">✉️ archive@kansya.in</span></li>
+          <li><span class="footer-text">🕒 Active (Mon-Sat) 10 AM - 6 PM</span></li>
+        </ul>
+      </div>
+      <div class="footer-newsletter">
+        <h4 class="footer-title">SUBSCRIBE TO OUR NEWSLETTER</h4>
+        <form class="newsletter-form" onsubmit="event.preventDefault();">
+          <input type="email" placeholder="Your e..." required>
+          <button type="submit">SUBSCRIBE</button>
+        </form>
+        <h4 class="footer-title">GIVE US A FOLLOW</h4>
+        <div class="social-icons">
+          <a href="#" class="social-icon">f</a>
+          <a href="#" class="social-icon">x</a>
+          <a href="#" class="social-icon">in</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      &copy; 2026 AAKAAR Dhokra Collective. All rights reserved.
+    </div>
+  </footer>
+
+</body>
+</html>

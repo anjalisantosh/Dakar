@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AAKAAR — Meet our Artisans</title>
+  <meta name="description" content="Meet the Dhokra artisans behind AAKAAR.">
+  <link rel="stylesheet" href="src/css/style.css">
+  <style>
+    body { background: var(--cream); }
+    
+    .page-wrap {
+      max-width: 1140px;
+      margin: 0 auto;
+      padding: 0 20px 80px;
+    }
+
+    /* ── TITLE ── */
+    .page-title {
+      text-align: center;
+      margin: 48px 0 40px;
+      font-family: 'Inter', sans-serif;
+      font-size: 36px;
+      font-weight: 800;
+      color: var(--text-primary);
+      letter-spacing: -0.02em;
+    }
+    .page-title span {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-weight: 400;
+      letter-spacing: 0.05em;
+    }
+
+    /* ── SEARCH BAR ── */
+    .search-row {
+      display: flex;
+      gap: 12px;
+      margin: 0 auto 32px auto;
+      max-width: 440px;
+    }
+    .search-input {
+      flex: 1;
+      background: #9A7B3C;
+      border: none;
+      border-radius: 23px;
+      padding: 0 24px;
+      height: 46px;
+      color: #fff;
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      box-shadow: inset 0 2px 8px rgba(0,0,0,0.1);
+    }
+    .search-input:focus { outline: 2px solid var(--brown-deep); }
+    .search-input::placeholder { color: rgba(255,255,255,0.7); }
+    
+    .search-btn {
+      background: #E4DCC6;
+      border: none;
+      border-radius: 23px;
+      padding: 0 32px;
+      font-family: 'Inter', sans-serif;
+      font-weight: 600;
+      font-size: 13px;
+      color: var(--text-primary);
+      cursor: pointer;
+      transition: all var(--transition);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+      height: 46px;
+    }
+    .search-btn:hover { background: #D8CEB3; }
+
+    /* ── FILTER CHIPS ── */
+    .filter-row {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 56px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .filter-chip {
+      background: #E4DCC6;
+      border: none;
+      border-radius: 24px;
+      padding: 10px 24px;
+      font-family: 'Inter', sans-serif;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-primary);
+      cursor: pointer;
+      transition: all var(--transition);
+    }
+    .filter-chip.active,
+    .filter-chip:hover {
+      background: #C4BA9D;
+    }
+
+    /* ── ARTISAN GRID ── */
+    .artisan-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 32px 48px;
+    }
+    @media (max-width: 600px) {
+      .artisan-grid { grid-template-columns: 1fr; }
+      .search-row { flex-direction: column; }
+    }
+
+    /* ── CARD ── */
+    .artisan-card {
+      background: #EAE3D1;
+      border-radius: 20px;
+      padding: 8px;
+      box-shadow: 0 4px 16px rgba(31,17,10,0.06);
+      transition: all var(--transition);
+      max-width: 400px;
+      width: 100%;
+      margin: 0 auto;
+    }
+    .artisan-card:hover { transform: translateY(-4px); box-shadow: 0 8px 24px rgba(31,17,10,0.1); }
+    
+    .artisan-img-wrap {
+      width: 100%;
+      aspect-ratio: 2 / 1;
+      border-radius: 14px;
+      overflow: hidden;
+      background-color: #EAE3D1;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+    }
+    .artisan-img-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      object-position: bottom center;
+      display: block;
+    }
+
+    .artisan-info {
+      padding: 12px 8px 10px;
+      text-align: center;
+    }
+    .artisan-name {
+      font-family: 'Inter', sans-serif;
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 6px;
+    }
+    .artisan-bio {
+      font-family: 'Inter', sans-serif;
+      font-size: 12px;
+      font-style: italic;
+      color: #555;
+      line-height: 1.5;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ── Navigation ── -->
+  <nav class="nav" style="position:sticky;top:0;z-index:100;background:var(--cream);border-bottom:1px solid rgba(31,17,10,0.08);height:75px;display:flex;align-items:center;justify-content:space-between;backdrop-filter:blur(12px);">
+    <a href="index.html" class="nav-logo" style="display:flex; flex-direction:column; align-items:center; gap:2px; text-decoration:none;">
+      <img src="src/assets/logo_transparent.png" alt="AAKAAR Logo" style="height: 46px; width: auto;">
+      <span style="font-family:'Playfair Display',serif;font-size:10px;font-weight:700;letter-spacing:.25em;color:var(--brown-dark);line-height:1;margin-left:3px;">AAKAAR</span>
+    </a>
+    <ul class="nav-links" style="display:flex;align-items:center;gap:28px;list-style:none;">
+      <li><a href="index.html" style="font-size:14px;font-weight:500;color:var(--text-secondary);transition:color .25s;">Home</a></li>
+      <li><a href="artisans.html" style="font-size:14px;font-weight:500;color:var(--text-primary);">Artisans</a></li>
+      <li><a href="market.html" style="font-size:14px;font-weight:500;color:var(--text-secondary);transition:color .25s;">Market</a></li>
+      <li><a href="about.html" style="font-size:14px;font-weight:500;color:var(--text-secondary);transition:color .25s;">About</a></li>
+    </ul>
+    <div style="display:flex;align-items:center;gap:12px;">
+      <div style="display:flex;align-items:center;background:var(--cream-dark);border-radius:20px;padding:3px;gap:2px;">
+        <button onclick="window.location='collector.html'" style="font-size:11px;font-weight:600;padding:4px 12px;border-radius:16px;transition:all .25s;color:var(--text-muted);border:none;background:none;cursor:pointer;font-family:'Inter',sans-serif;">Collect</button>
+        <button onclick="window.location='artisan.html'" style="font-size:11px;font-weight:600;padding:4px 12px;border-radius:16px;background:var(--brown-dark);color:var(--cream);border:none;cursor:pointer;font-family:'Inter',sans-serif;">Sell</button>
+      </div>
+      <button style="width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:transparent;border:none;cursor:pointer;color:var(--text-secondary);">
+        <svg width="17" height="17" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 01-8 0"></path></svg>
+      </button>
+      <a href="login.html" style="width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:transparent;border:none;cursor:pointer;color:var(--text-secondary);text-decoration:none;">
+        <svg width="17" height="17" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+      </a>
+    </div>
+  </nav>
+
+  <div class="page-wrap">
+    
+    <h1 class="page-title animate-fade-up">Meet our <span>ARTISANS</span>
+</h1>
+
+    <div class="search-row animate-fade-up delay-1">
+      <input type="text" class="search-input" placeholder="Search here">
+      <button class="search-btn">Search</button>
+    </div>
+
+    <div class="filter-row animate-fade-up delay-2">
+      <button class="filter-chip active">All</button>
+      <button class="filter-chip">Home Decor</button>
+      <button class="filter-chip">Jewellery</button>
+      <button class="filter-chip">Wall art</button>
+      <button class="filter-chip">Interior Decor</button>
+    </div>
+
+    <div class="artisan-grid">
+      
+      <!-- Card 1 -->
+      <div class="artisan-card animate-fade-up delay-3" onclick="window.location.href='artisan_raghunath.html'" style="cursor: pointer;">
+        <div class="artisan-img-wrap">
+          <img src="images/Raghunath%20Behera.png" alt="Raghunath Behera" loading="lazy">
+        </div>
+        <div class="artisan-info">
+          <div class="artisan-name">Raghunath Behera</div>
+          <div class="artisan-bio">GI Certified Dhokra Artisan<br>Dhenkanal, Odisha. 35 years of<br>craftsmanship</div>
+        </div>
+      </div>
+
+      <!-- Card 2 -->
+      <div class="artisan-card animate-fade-up delay-4" onclick="window.location.href='artisan_sudha.html'" style="cursor: pointer;">
+        <div class="artisan-img-wrap">
+          <img src="images/Sudha%20paridha.png" alt="Sudha Paridha" loading="lazy">
+        </div>
+        <div class="artisan-info">
+          <div class="artisan-name">Sudha Paridha</div>
+          <div class="artisan-bio">Verified Heritage Artisan since 2003<br>Nuapatna, Odisha. 22 years of<br>craftsmanship</div>
+        </div>
+      </div>
+
+      <!-- Card 3 -->
+      <div class="artisan-card hidden-artisan animate-fade-up delay-5" onclick="window.location.href='artisan_basindhar.html'" style="cursor: pointer; display: none;">
+        <div class="artisan-img-wrap">
+          <img src="images/Basindhar%20Behera.png" alt="Basindhar Karmakar" loading="lazy">
+        </div>
+        <div class="artisan-info">
+          <div class="artisan-name">Basindhar Karmakar</div>
+          <div class="artisan-bio">State Handicrafts-Certified Artisan<br>Balangir, Odisha. 30 years of<br>craftsmanship</div>
+        </div>
+      </div>
+
+      <!-- Card 4 -->
+      <div class="artisan-card hidden-artisan animate-fade-up delay-6" onclick="window.location.href='artisan_dimnath.html'" style="cursor: pointer; display: none;">
+        <div class="artisan-img-wrap">
+          <img src="images/Dignnath%20Behera.png" alt="Dinnath Behera" loading="lazy">
+        </div>
+        <div class="artisan-info">
+          <div class="artisan-name">Dinnath Behera</div>
+          <div class="artisan-bio">Odisha Artisan Collective Verified<br>Sadeibareni, Odisha. 35 years of<br>craftsmanship</div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="load-more-wrap" style="text-align: center; margin-top: 40px;">
+      <button id="loadMoreBtn" class="btn btn-outline" style="padding: 12px 32px; border-radius: 30px;" onclick="document.querySelectorAll('.hidden-artisan').forEach(el => el.style.display = 'block'); this.style.display = 'none';">
+        Load More
+      </button>
+    </div>
+
+  </div>
+
+  <script>
+    // Filter chip interaction
+    const chips = document.querySelectorAll('.filter-chip');
+    chips.forEach(chip => {
+      chip.addEventListener('click', () => {
+        chips.forEach(c => c.classList.remove('active'));
+        chip.classList.add('active');
+      });
+    });
+  </script>
+
+  <footer class="site-footer">
+    <div class="footer-top">
+      <div class="footer-col">
+        <h4 class="footer-title">QUICK LINKS</h4>
+        <ul class="footer-links">
+          <li><a href="about.html">Our Story</a></li>
+          <li><a href="#">Contact</a></li>
+          <li><a href="#">Blog</a></li>
+          <li><a href="#">Privacy Policy</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4 class="footer-title">INFORMATION</h4>
+        <ul class="footer-links">
+          <li><a href="#">Terms and Conditions</a></li>
+          <li><a href="#">Shipping</a></li>
+          <li><a href="#">Returns</a></li>
+          <li><a href="#">FAQ</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4 class="footer-title">HELP</h4>
+        <ul class="footer-links">
+          <li><span class="footer-text">📞 +91 98765 43210</span></li>
+          <li><span class="footer-text">✉️ archive@kansya.in</span></li>
+          <li><span class="footer-text">🕒 Active (Mon-Sat) 10 AM - 6 PM</span></li>
+        </ul>
+      </div>
+      <div class="footer-newsletter">
+        <h4 class="footer-title">SUBSCRIBE TO OUR NEWSLETTER</h4>
+        <form class="newsletter-form" onsubmit="event.preventDefault();">
+          <input type="email" placeholder="Your e..." required>
+          <button type="submit">SUBSCRIBE</button>
+        </form>
+        <h4 class="footer-title">GIVE US A FOLLOW</h4>
+        <div class="social-icons">
+          <a href="#" class="social-icon">f</a>
+          <a href="#" class="social-icon">x</a>
+          <a href="#" class="social-icon">in</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      &copy; 2026 AAKAAR Dhokra Collective. All rights reserved.
+    </div>
+  </footer>
+
+</body>
+</html>

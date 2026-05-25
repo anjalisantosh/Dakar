@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AAKAAR — Artisan Dashboard · Sudha</title>
+  <meta name="description" content="Artisan dashboard for Sudha — upload new Dhokra products, track earnings, and manage your craft store." />
+  <link rel="stylesheet" href="src/css/style.css" />
+  <style>
+    body { background: var(--cream); }
+
+    .page-wrap {
+      max-width: 1140px;
+      width: 92%;
+      margin: 0 auto;
+      padding: 40px 0 80px;
+    }
+    @media (max-width: 768px) {
+      .page-wrap { padding: 20px 0 60px; width: 90%; }
+    }
+
+    /* ── Greeting ── */
+    .greeting { padding: 0 0 24px; }
+    .greeting-label {
+      font-size: 32px;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+    @media (max-width: 768px) { .greeting-label { font-size: 28px; } }
+    .greeting-name {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: 32px;
+      color: var(--text-primary);
+    }
+    @media (max-width: 768px) { .greeting-name { font-size: 28px; } }
+
+    /* ── Earnings Card ── */
+    .earnings-card {
+      background: var(--golden-bg);
+      border-radius: var(--radius-lg);
+      padding: 32px;
+      margin-bottom: 48px;
+    }
+    @media (max-width: 768px) { .earnings-card { padding: 22px 20px; margin-bottom: 32px; } }
+    .earnings-layout {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+    @media (max-width: 768px) { .earnings-layout { display: block; } }
+    .earnings-grid {
+      display: contents; /* Flattens nested div on desktop */
+    }
+    @media (max-width: 768px) {
+      .earnings-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
+    }
+    
+    .earnings-tile, .earnings-full {
+      background: rgba(255,255,255,0.15);
+      border-radius: var(--radius-sm);
+      padding: 20px 24px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    @media (max-width: 768px) {
+      .earnings-tile { padding: 14px 16px; }
+      .earnings-full { padding: 14px 16px; flex-direction: row; justify-content: space-between; align-items: center; }
+    }
+    .earnings-tile-label, .earnings-full-label {
+      font-size: 13px;
+      font-weight: 500;
+      color: rgba(255,255,255,0.8);
+      margin-bottom: 8px;
+    }
+    @media (max-width: 768px) {
+      .earnings-tile-label { font-size: 12px; margin-bottom: 4px; }
+      .earnings-full-label { margin-bottom: 0; }
+    }
+    .earnings-tile-val, .earnings-full-val {
+      font-family: 'Playfair Display', serif;
+      font-size: 32px;
+      font-weight: 700;
+      color: #fff;
+    }
+    @media (max-width: 768px) {
+      .earnings-tile-val, .earnings-full-val { font-size: 26px; }
+    }
+
+    /* ── Quick Actions ── */
+    .quick-actions-section { margin-bottom: 48px; }
+    .quick-actions-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      margin-bottom: 16px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+    @media (max-width: 768px) { .quick-actions-title { font-size: 13px; margin-bottom: 12px; } }
+    .quick-actions { 
+      display: grid; 
+      grid-template-columns: repeat(3, 1fr); 
+      gap: 16px; 
+    }
+    @media (max-width: 768px) { .quick-actions { grid-template-columns: 1fr; gap: 10px; } }
+    .quick-action-btn {
+      width: 100%;
+      padding: 16px 24px;
+      border-radius: 40px;
+      font-size: 16px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      transition: all var(--transition);
+      cursor: pointer;
+      border: none;
+      font-family: 'Inter', sans-serif;
+    }
+    .qab-primary {
+      background: var(--brown-dark);
+      color: var(--cream);
+    }
+    .qab-primary:hover {
+      background: var(--brown-deep);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+    }
+    .qab-secondary {
+      background: var(--cream-dark);
+      color: var(--text-primary);
+    }
+    .qab-secondary:hover {
+      background: var(--parchment);
+      transform: translateY(-2px);
+    }
+
+    /* ── Divider ── */
+    .section-divider {
+      border: none;
+      border-top: 1.5px solid rgba(31,17,10,0.07);
+      margin: 20px 0 40px;
+    }
+
+    /* ── Upload Form ── */
+    #upload-section {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 0 16px;
+    }
+    .upload-section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 28px;
+      font-weight: 600;
+      margin-bottom: 24px;
+      text-align: center;
+    }
+    @media (max-width: 768px) {
+      #upload-section { padding: 0; }
+      .upload-section-title { font-size: 22px; margin-bottom: 20px; text-align: left; }
+    }
+
+    /* Image upload area */
+    .img-upload-area {
+      border: 2px dashed var(--parchment);
+      border-radius: var(--radius-md);
+      aspect-ratio: 4/3;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      background: var(--cream-mid);
+      cursor: pointer;
+      transition: all var(--transition);
+      position: relative;
+      overflow: hidden;
+      margin-bottom: 12px;
+    }
+    .img-upload-area:hover {
+      border-color: var(--golden);
+      background: var(--cream-dark);
+    }
+    .img-upload-area.has-image {
+      border-style: solid;
+      border-color: var(--golden-bg);
+    }
+    .img-upload-area input[type="file"] {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      cursor: pointer;
+    }
+    .img-upload-area img.preview {
+      position: absolute;
+      inset: 0;
+      width: 100%; height: 100%;
+      object-fit: cover;
+    }
+    .upload-icon {
+      width: 48px; height: 48px;
+      background: var(--cream-dark);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--text-muted);
+    }
+    .upload-text {
+      font-size: 14px;
+      color: var(--text-muted);
+      text-align: center;
+    }
+    .upload-sub {
+      font-size: 12px;
+      color: var(--text-muted);
+      opacity: 0.7;
+    }
+    .img-upload-label {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+
+    /* Category chips */
+    .category-chips {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 4px;
+    }
+    .cat-chip {
+      padding: 8px 18px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      background: var(--cream-dark);
+      color: var(--text-secondary);
+      border: none;
+      transition: all var(--transition);
+    }
+    .cat-chip.active, .cat-chip:hover {
+      background: var(--golden-bg);
+      color: var(--cream);
+    }
+
+    /* Publish Button */
+    .publish-btn {
+      width: 100%;
+      padding: 17px;
+      border-radius: 40px;
+      background: var(--brown-dark);
+      color: var(--cream);
+      font-size: 16px;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      margin-top: 28px;
+      transition: all var(--transition);
+      font-family: 'Inter', sans-serif;
+    }
+    .publish-btn:hover {
+      background: var(--brown-deep);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+    }
+
+    /* Success Toast */
+    .toast {
+      position: fixed;
+      bottom: 32px;
+      left: 50%;
+      transform: translateX(-50%) translateY(80px);
+      background: var(--brown-dark);
+      color: var(--cream);
+      padding: 14px 28px;
+      border-radius: 40px;
+      font-size: 14px;
+      font-weight: 500;
+      z-index: 999;
+      opacity: 0;
+      transition: all 0.4s cubic-bezier(0.4,0,0.2,1);
+      display: flex; align-items: center; gap: 10px;
+      white-space: nowrap;
+    }
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+  </style>
+</head>
+<body>
+
+  <!-- ── Navigation ── -->
+  <nav class="nav" style="position:sticky;top:0;z-index:100;background:var(--cream);border-bottom:1px solid rgba(31,17,10,0.08);height:75px;display:flex;align-items:center;justify-content:space-between;backdrop-filter:blur(12px);">
+    <a href="index.html" class="nav-logo" style="display:flex; flex-direction:column; align-items:center; gap:2px; text-decoration:none;">
+      <img src="src/assets/logo_transparent.png" alt="AAKAAR Logo" style="height: 46px; width: auto;">
+      <span style="font-family:'Playfair Display',serif;font-size:10px;font-weight:700;letter-spacing:.25em;color:var(--brown-dark);line-height:1;margin-left:3px;">AAKAAR</span>
+    </a>
+    <ul class="nav-links" style="display:flex;align-items:center;gap:28px;list-style:none;">
+      <li><a href="index.html" style="font-size:14px;font-weight:500;color:var(--text-secondary);transition:color .25s;">Home</a></li>
+      <li><a href="artisans.html" style="font-size:14px;font-weight:500;color:var(--text-secondary);transition:color .25s;">Artisans</a></li>
+      <li><a href="market.html" style="font-size:14px;font-weight:500;color:var(--text-secondary);transition:color .25s;">Market</a></li>
+      <li><a href="about.html" style="font-size:14px;font-weight:500;color:var(--text-secondary);transition:color .25s;">About</a></li>
+    </ul>
+    <div style="display:flex;align-items:center;gap:12px;">
+      <div style="display:flex;align-items:center;background:var(--cream-dark);border-radius:20px;padding:3px;gap:2px;">
+        <button onclick="window.location='collector.html'" style="font-size:11px;font-weight:600;padding:4px 12px;border-radius:16px;transition:all .25s;color:var(--text-muted);border:none;background:none;cursor:pointer;font-family:'Inter',sans-serif;">Collect</button>
+        <button onclick="window.location='artisan.html'" style="font-size:11px;font-weight:600;padding:4px 12px;border-radius:16px;background:var(--brown-dark);color:var(--cream);border:none;cursor:pointer;font-family:'Inter',sans-serif;">Sell</button>
+      </div>
+      <button style="width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:transparent;border:none;cursor:pointer;color:var(--text-secondary);">
+        <svg width="17" height="17" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 01-8 0"></path></svg>
+      </button>
+      <a href="login.html" style="width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:transparent;border:none;cursor:pointer;color:var(--text-secondary);text-decoration:none;">
+        <svg width="17" height="17" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+      </a>
+    </div>
+  </nav>
+
+  <div class="page-wrap">
+
+    <!-- ── Greeting & Language ── -->
+    <div class="greeting animate-fade-up" style="display: flex; justify-content: space-between; align-items: flex-end;">
+      <div>
+        <div class="greeting-label">Namaste</div>
+        <div class="greeting-name">Sudha</div>
+      </div>
+      <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 8px;">
+        <label for="pref-lang" style="font-size: 13px; font-weight: 500; color: var(--text-secondary);">Preferred Language</label>
+        <select id="pref-lang" style="padding: 10px 16px; border-radius: 20px; font-size: 14px; font-family: 'Inter', sans-serif; background: var(--cream-dark); border: none; cursor: pointer; color: var(--text-primary); outline: none;">
+          <option value="en">English</option>
+          <option value="or">Odia</option>
+          <option value="hi">Hindi</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- ── Earnings Card ── -->
+    <div class="earnings-card animate-fade-up delay-1">
+      <div class="earnings-layout">
+        <div class="earnings-grid">
+          <div class="earnings-tile">
+            <div class="earnings-tile-label">Earnings</div>
+            <div class="earnings-tile-val">₹15,000</div>
+          </div>
+          <div class="earnings-tile">
+            <div class="earnings-tile-label">New Orders</div>
+            <div class="earnings-tile-val">02</div>
+          </div>
+        </div>
+        <div class="earnings-full">
+          <div class="earnings-full-label">Active Products</div>
+          <div class="earnings-full-val">50</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Quick Actions ── -->
+    <div class="quick-actions-section animate-fade-up delay-2">
+      <div class="quick-actions-title">Quick Actions</div>
+      <div class="quick-actions">
+        <button class="quick-action-btn qab-primary" onclick="scrollToUpload()">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Add new Products
+        </button>
+        <button class="quick-action-btn qab-secondary">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+          View all Orders
+        </button>
+        <button class="quick-action-btn qab-secondary">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          Earning History
+        </button>
+      </div>
+    </div>
+
+    <hr class="section-divider"/>
+
+    <!-- ── Upload Form ── -->
+    <div id="upload-section" class="animate-fade-up delay-3">
+      <div class="upload-section-title">Upload New Product</div>
+
+      <form id="upload-form" onsubmit="handlePublish(event)">
+
+        <!-- Craft Images -->
+        <div class="form-group">
+          <label class="img-upload-label">Craft Images</label>
+          <div class="img-upload-area" id="upload-area">
+            <input type="file" accept="image/*" onchange="previewImage(event)" />
+            <div class="upload-icon" id="upload-icon">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+            </div>
+            <div class="upload-text" id="upload-text">Tap to add craft photos</div>
+            <div class="upload-sub" id="upload-sub">JPG, PNG up to 10MB</div>
+          </div>
+        </div>
+
+        <!-- Product Name -->
+        <div class="form-group">
+          <label class="form-label" for="prod-name">What are you selling</label>
+          <input class="form-input" type="text" id="prod-name" placeholder="e.g. Statement Choker" required />
+        </div>
+
+        <!-- Price -->
+        <div class="form-group">
+          <label class="form-label" for="prod-price">Price</label>
+          <input class="form-input" type="text" id="prod-price" placeholder="e.g. ₹7,500" required />
+        </div>
+
+        <!-- Category -->
+        <div class="form-group">
+          <label class="form-label">Craft Category</label>
+          <div class="category-chips">
+            <button type="button" class="cat-chip active" onclick="selectCat(this)">Jewellery</button>
+            <button type="button" class="cat-chip" onclick="selectCat(this)">Home Decor</button>
+            <button type="button" class="cat-chip" onclick="selectCat(this)">Wall Art</button>
+            <button type="button" class="cat-chip" onclick="selectCat(this)">Interior</button>
+          </div>
+        </div>
+
+        <!-- Story -->
+        <div class="form-group">
+          <label class="form-label" for="prod-story">Tell the story</label>
+          <textarea class="form-textarea" id="prod-story" rows="4" placeholder="Share the story behind this piece — the inspiration, the process, what makes it unique…"></textarea>
+        </div>
+
+        <button type="submit" class="publish-btn">Publish for sale</button>
+      </form>
+    </div>
+
+  </div>
+
+  <!-- ── Toast ── -->
+  <div class="toast" id="toast">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+    Product published successfully!
+  </div>
+
+  <script>
+    function scrollToUpload() {
+      document.getElementById('upload-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    function previewImage(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+      const area = document.getElementById('upload-area');
+      const icon = document.getElementById('upload-icon');
+      const text = document.getElementById('upload-text');
+      const sub  = document.getElementById('upload-sub');
+      const reader = new FileReader();
+      reader.onload = ev => {
+        let prev = area.querySelector('img.preview');
+        if (!prev) { prev = document.createElement('img'); prev.className = 'preview'; area.prepend(prev); }
+        prev.src = ev.target.result;
+        area.classList.add('has-image');
+        icon.style.display = 'none';
+        text.style.display = 'none';
+        sub.style.display = 'none';
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function selectCat(btn) {
+      document.querySelectorAll('.cat-chip').forEach(c => c.classList.remove('active'));
+      btn.classList.add('active');
+    }
+
+    function handlePublish(e) {
+      e.preventDefault();
+      const toast = document.getElementById('toast');
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 3200);
+      e.target.reset();
+      const area = document.getElementById('upload-area');
+      const prev = area.querySelector('img.preview');
+      if (prev) prev.remove();
+      area.classList.remove('has-image');
+      document.getElementById('upload-icon').style.display = '';
+      document.getElementById('upload-text').style.display = '';
+      document.getElementById('upload-sub').style.display = '';
+    }
+  </script>
+
+  <footer class="site-footer">
+    <div class="footer-top">
+      <div class="footer-col">
+        <h4 class="footer-title">QUICK LINKS</h4>
+        <ul class="footer-links">
+          <li><a href="about.html">Our Story</a></li>
+          <li><a href="#">Contact</a></li>
+          <li><a href="#">Blog</a></li>
+          <li><a href="#">Privacy Policy</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4 class="footer-title">INFORMATION</h4>
+        <ul class="footer-links">
+          <li><a href="#">Terms and Conditions</a></li>
+          <li><a href="#">Shipping</a></li>
+          <li><a href="#">Returns</a></li>
+          <li><a href="#">FAQ</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4 class="footer-title">HELP</h4>
+        <ul class="footer-links">
+          <li><span class="footer-text">📞 +91 98765 43210</span></li>
+          <li><span class="footer-text">✉️ archive@kansya.in</span></li>
+          <li><span class="footer-text">🕒 Active (Mon-Sat) 10 AM - 6 PM</span></li>
+        </ul>
+      </div>
+      <div class="footer-newsletter">
+        <h4 class="footer-title">SUBSCRIBE TO OUR NEWSLETTER</h4>
+        <form class="newsletter-form" onsubmit="event.preventDefault();">
+          <input type="email" placeholder="Your e..." required>
+          <button type="submit">SUBSCRIBE</button>
+        </form>
+        <h4 class="footer-title">GIVE US A FOLLOW</h4>
+        <div class="social-icons">
+          <a href="#" class="social-icon">f</a>
+          <a href="#" class="social-icon">x</a>
+          <a href="#" class="social-icon">in</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      &copy; 2026 AAKAAR Dhokra Collective. All rights reserved.
+    </div>
+  </footer>
+
+</body>
+</html>

@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AAKAAR — My Collection · Ramesh</title>
+  <meta name="description" content="Collector dashboard for Ramesh — track your Dhokra collection, favourite artisans and recent activities." />
+  <link rel="stylesheet" href="src/css/style.css" />
+  <style>
+    body { background: var(--cream); }
+
+    .page-wrap {
+      max-width: 1140px;
+      width: 92%;
+      margin: 0 auto;
+      padding: 40px 0 80px;
+    }
+    @media (max-width: 768px) {
+      .page-wrap { padding: 20px 0 60px; width: 90%; }
+    }
+
+    /* ── Greeting ── */
+    .greeting { padding: 0 0 24px; }
+    .greeting-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-bottom: 24px;
+    }
+    @media (max-width: 600px) {
+      .greeting-header { flex-direction: column; align-items: flex-start; gap: 16px; }
+    }
+    .greeting-label {
+      font-size: 32px;
+      font-weight: 700;
+      font-family: 'Inter', sans-serif;
+      color: var(--text-primary);
+      margin-bottom: 4px;
+    }
+    @media (max-width: 768px) { .greeting-label { font-size: 28px; } }
+    .greeting-name {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: 32px;
+      color: var(--text-primary);
+    }
+    @media (max-width: 768px) { .greeting-name { font-size: 28px; } }
+    .order-history-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--golden-bg);
+      color: var(--cream);
+      font-size: 13px;
+      font-weight: 600;
+      padding: 10px 20px;
+      border-radius: 24px;
+      transition: all var(--transition);
+    }
+    .order-history-btn:hover { background: var(--olive); transform: translateY(-2px); }
+    @media (max-width: 768px) {
+      .order-history-btn { font-size: 12px; padding: 7px 16px; border-radius: 20px; }
+    }
+
+    /* ── Stats Row ── */
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      margin-bottom: 32px;
+    }
+    @media (max-width: 700px) {
+      .stats-row { grid-template-columns: 1fr; gap: 12px; margin-bottom: 24px; }
+    }
+    .stat-tile {
+      background: var(--cream-mid);
+      border-radius: 60px;
+      padding: 18px 24px;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 16px;
+      transition: all var(--transition);
+      box-shadow: 0 1px 4px rgba(44,24,16,0.05);
+    }
+    @media (max-width: 768px) {
+      .stat-tile { padding: 16px 20px; border-radius: 50px; gap: 14px; }
+    }
+    .stat-tile:hover { transform: translateY(-2px); box-shadow: var(--shadow-sm); }
+    .stat-icon {
+      width: 38px;
+      height: 38px;
+      flex-shrink: 0;
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    @media (max-width: 768px) { .stat-icon { width: 32px; height: 32px; } }
+    .stat-icon svg { width: 100%; height: 100%; stroke: var(--text-primary); }
+    .stat-tile-text { display: flex; flex-direction: column; gap: 3px; }
+    .stat-tile-num {
+      font-family: 'Playfair Display', serif;
+      font-size: 26px;
+      font-weight: 700;
+      color: var(--text-primary);
+      line-height: 1;
+    }
+    @media (max-width: 768px) { .stat-tile-num { font-size: 21px; } }
+    .stat-tile-label {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-muted);
+      line-height: 1.3;
+      white-space: nowrap;
+    }
+    @media (max-width: 768px) { .stat-tile-label { font-size: 11px; } }
+
+    /* ── Hero Card ── */
+    .hero-card {
+      position: relative;
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      margin-bottom: 40px;
+      height: 360px;
+    }
+    @media (max-width: 768px) {
+      .hero-card { height: 220px; margin-bottom: 32px; }
+    }
+    .hero-card img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      filter: brightness(0.5);
+    }
+    .hero-card-content {
+      position: absolute;
+      inset: 0;
+      padding: 40px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+    }
+    @media (max-width: 768px) { .hero-card-content { padding: 24px; } }
+    .hero-card-quote {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: 28px;
+      color: #fff;
+      line-height: 1.4;
+      margin-bottom: 20px;
+      max-width: 400px;
+    }
+    @media (max-width: 768px) {
+      .hero-card-quote { font-size: 19px; margin-bottom: 14px; max-width: 260px; }
+    }
+    .hero-card-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255,255,255,0.2);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255,255,255,0.3);
+      color: #fff;
+      font-size: 14px;
+      font-weight: 600;
+      padding: 12px 24px;
+      border-radius: 24px;
+      width: fit-content;
+      transition: all var(--transition);
+    }
+    @media (max-width: 768px) {
+      .hero-card-btn { font-size: 13px; padding: 9px 20px; border-radius: 20px; gap: 6px; }
+    }
+    .hero-card-btn:hover { background: rgba(255,255,255,0.3); transform: scale(1.02); }
+
+    /* ── My Collections ── */
+    .section-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+    }
+    @media (max-width: 768px) { .section-head { margin-bottom: 16px; } }
+    .section-head h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 24px;
+      font-weight: 600;
+    }
+    @media (max-width: 768px) { .section-head h2 { font-size: 20px; } }
+    .section-head a { font-size: 14px; color: var(--golden); font-weight: 600; transition: color var(--transition); }
+    .section-head a:hover { color: var(--olive); }
+    @media (max-width: 768px) { .section-head a { font-size: 13px; font-weight: 500; } }
+
+    .collection-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 16px;
+      margin-bottom: 48px;
+    }
+    @media (max-width: 768px) {
+      .collection-grid { grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 32px; }
+    }
+    .collection-item {
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      aspect-ratio: 1;
+      cursor: pointer;
+      transition: all var(--transition);
+    }
+    .collection-item:hover { transform: scale(1.03); box-shadow: var(--shadow-md); z-index: 2; }
+    .collection-item img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+    }
+
+    /* ── Two Col Row ── */
+    .two-col-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+      margin-bottom: 48px;
+    }
+    @media (max-width: 900px) {
+      .two-col-row { grid-template-columns: 1fr; gap: 32px; margin-bottom: 32px; }
+    }
+
+    /* ── Favourite Artisans ── */
+    .artisan-list { display: flex; flex-direction: column; gap: 0; }
+    .artisan-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 0;
+      border-bottom: 1px solid rgba(31,17,10,0.06);
+      cursor: pointer;
+    }
+    .artisan-item:last-child { border-bottom: none; }
+    .artisan-avatar {
+      width: 44px; height: 44px;
+      border-radius: 50%;
+      object-fit: cover;
+      flex-shrink: 0;
+      border: 2px solid var(--parchment);
+    }
+    .artisan-avatar-placeholder {
+      width: 44px; height: 44px;
+      border-radius: 50%;
+      background: var(--parchment);
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Playfair Display', serif;
+      font-size: 16px;
+      color: var(--brown-mid);
+      flex-shrink: 0;
+    }
+    .artisan-item-name {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+    .artisan-item-role {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 1px;
+    }
+
+    /* ── Recent Activities ── */
+    .activity-list { display: flex; flex-direction: column; gap: 8px; }
+    .activity-chip {
+      background: var(--cream-dark);
+      border-radius: 20px;
+      padding: 10px 16px;
+      font-size: 13px;
+      color: var(--text-secondary);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .activity-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--golden);
+      flex-shrink: 0;
+    }
+
+    /* ── Discover Button ── */
+    .discover-cta {
+      margin-top: 24px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ── Navigation ── -->
+  <nav class="nav" style="position:sticky;top:0;z-index:100;background:var(--cream);border-bottom:1px solid rgba(31,17,10,0.08);height:75px;display:flex;align-items:center;justify-content:space-between;backdrop-filter:blur(12px);">
+    <a href="index.html" class="nav-logo" style="display:flex; flex-direction:column; align-items:center; gap:2px; text-decoration:none;">
+      <img src="src/assets/logo_transparent.png" alt="AAKAAR Logo" style="height: 46px; width: auto;">
+      <span style="font-family:'Playfair Display',serif;font-size:10px;font-weight:700;letter-spacing:.25em;color:var(--brown-dark);line-height:1;margin-left:3px;">AAKAAR</span>
+    </a>
+    <ul class="nav-links" style="display:flex;align-items:center;gap:28px;list-style:none;">
+      <li><a href="index.html" style="font-size:14px;font-weight:500;color:var(--text-secondary);transition:color .25s;">Home</a></li>
+      <li><a href="artisans.html" style="font-size:14px;font-weight:500;color:var(--text-secondary);transition:color .25s;">Artisans</a></li>
+      <li><a href="market.html" style="font-size:14px;font-weight:500;color:var(--text-secondary);transition:color .25s;">Market</a></li>
+      <li><a href="about.html" style="font-size:14px;font-weight:500;color:var(--text-secondary);transition:color .25s;">About</a></li>
+    </ul>
+    <div style="display:flex;align-items:center;gap:12px;">
+      <div style="display:flex;align-items:center;background:var(--cream-dark);border-radius:20px;padding:3px;gap:2px;">
+        <button onclick="window.location='collector.html'" style="font-size:11px;font-weight:600;padding:4px 12px;border-radius:16px;transition:all .25s;color:var(--text-muted);border:none;background:none;cursor:pointer;font-family:'Inter',sans-serif;">Collect</button>
+        <button onclick="window.location='artisan.html'" style="font-size:11px;font-weight:600;padding:4px 12px;border-radius:16px;background:var(--brown-dark);color:var(--cream);border:none;cursor:pointer;font-family:'Inter',sans-serif;">Sell</button>
+      </div>
+      <button style="width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:transparent;border:none;cursor:pointer;color:var(--text-secondary);">
+        <svg width="17" height="17" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 01-8 0"></path></svg>
+      </button>
+      <a href="login.html" style="width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:transparent;border:none;cursor:pointer;color:var(--text-secondary);text-decoration:none;">
+        <svg width="17" height="17" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+      </a>
+    </div>
+  </nav>
+
+  <div class="page-wrap">
+
+    <!-- ── Greeting ── -->
+    <div class="greeting animate-fade-up">
+      <div class="greeting-header">
+        <div>
+          <div class="greeting-label">Namaste</div>
+          <div class="greeting-name">Ramesh</div>
+        </div>
+        <a href="#" class="order-history-btn">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          Order History
+        </a>
+      </div>
+    </div>
+
+    <!-- ── Stats Row ── -->
+    <div class="stats-row animate-fade-up delay-1">
+
+      <!-- Items Collected -->
+      <div class="stat-tile">
+        <div class="stat-icon">
+          <!-- Plant / pot icon -->
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 22V12"/>
+            <path d="M5 12c0-4 3-7 7-7 4 0 7 3 7 7-2 0-5-1-7-3-2 2-5 3-7 3z"/>
+            <rect x="8" y="18" width="8" height="4" rx="1"/>
+          </svg>
+        </div>
+        <div class="stat-tile-text">
+          <div class="stat-tile-num">24</div>
+          <div class="stat-tile-label">Items Collected</div>
+        </div>
+      </div>
+
+      <!-- Artisans Supported -->
+      <div class="stat-tile">
+        <div class="stat-icon">
+          <!-- Paintbrush icon -->
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18.37 2.63 14 7l-1.59-1.59a2 2 0 0 0-2.82 0L8 7l9 9 1.59-1.59a2 2 0 0 0 0-2.82L17 10l4.37-4.37a1 1 0 0 0-3-3z"/>
+            <path d="M8 7 3 12l4 4 5-5"/>
+            <path d="M5 15 3 21l6-2"/>
+          </svg>
+        </div>
+        <div class="stat-tile-text">
+          <div class="stat-tile-num">12</div>
+          <div class="stat-tile-label">Artisans Supported</div>
+        </div>
+      </div>
+
+      <!-- Craft Stories Explored -->
+      <div class="stat-tile">
+        <div class="stat-icon">
+          <!-- Bookmark / book icon -->
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+            <path d="M6.5 2H20v20l-7-4-7 4V2z"/>
+          </svg>
+        </div>
+        <div class="stat-tile-text">
+          <div class="stat-tile-num">08</div>
+          <div class="stat-tile-label">Craft Stories Explored</div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ── Hero Card ── -->
+    <div class="hero-card animate-fade-up delay-2">
+      <img src="src/assets/craft1.jpg" alt="Dhokra craft" />
+      <div class="hero-card-content">
+        <div class="hero-card-quote">"Handcast in tradition, collected in time."</div>
+        <a href="market.html" class="hero-card-btn">View my collection</a>
+      </div>
+    </div>
+
+    <!-- ── My Collections ── -->
+    <div class="animate-fade-up delay-3">
+      <div class="section-head">
+        <h2>My Collections</h2>
+        <a href="market.html">View all</a>
+      </div>
+      <div class="collection-grid">
+        <div class="collection-item">
+          <img src="src/assets/craft8.jpg" alt="Collection 1" loading="lazy"/>
+        </div>
+        <div class="collection-item">
+          <img src="src/assets/craft10.jpg" alt="Collection 2" loading="lazy"/>
+        </div>
+        <div class="collection-item">
+          <img src="src/assets/craft12.jpg" alt="Collection 3" loading="lazy"/>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Two Col: Artisans + Activities ── -->
+    <div class="two-col-row animate-fade-up delay-4">
+
+      <!-- Favourite Artisans -->
+      <div>
+        <div class="section-head" style="margin-bottom:12px;">
+          <h2 style="font-size:16px;">Favourite artisans</h2>
+        </div>
+        <div class="artisan-list">
+          <div class="artisan-item">
+            <div class="artisan-avatar-placeholder">S</div>
+            <div>
+              <div class="artisan-item-name">Sudha Paridha</div>
+              <div class="artisan-item-role">Jewellery · Odisha</div>
+            </div>
+          </div>
+          <div class="artisan-item">
+            <div class="artisan-avatar-placeholder">D</div>
+            <div>
+              <div class="artisan-item-name">Dinnath Behera</div>
+              <div class="artisan-item-role">Figurines · Bengal</div>
+            </div>
+          </div>
+          <div class="artisan-item">
+            <div class="artisan-avatar-placeholder">G</div>
+            <div>
+              <div class="artisan-item-name">Basindhar Karmakar</div>
+              <div class="artisan-item-role">Wall Art · Chhattisgarh</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Recent Activities -->
+      <div>
+        <div class="section-head" style="margin-bottom:12px;">
+          <h2 style="font-size:16px;">Recent Activities</h2>
+        </div>
+        <div class="activity-list">
+          <div class="activity-chip">
+            <div class="activity-dot"></div>
+            Supported artisan Sudha Paridha
+          </div>
+          <div class="activity-chip">
+            <div class="activity-dot"></div>
+            Saved piece from Heritage Living
+          </div>
+          <div class="activity-chip">
+            <div class="activity-dot"></div>
+            Ordered Tribal Pendant
+          </div>
+          <div class="activity-chip">
+            <div class="activity-dot"></div>
+            Viewed Govindhar's story
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Discover CTA ── -->
+    <div class="discover-cta animate-fade-up delay-5">
+      <a href="market.html" class="btn btn-golden btn-full" style="font-size:16px; padding:16px;">Discover more</a>
+    </div>
+
+  </div>
+
+
+  <footer class="site-footer">
+    <div class="footer-top">
+      <div class="footer-col">
+        <h4 class="footer-title">QUICK LINKS</h4>
+        <ul class="footer-links">
+          <li><a href="about.html">Our Story</a></li>
+          <li><a href="#">Contact</a></li>
+          <li><a href="#">Blog</a></li>
+          <li><a href="#">Privacy Policy</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4 class="footer-title">INFORMATION</h4>
+        <ul class="footer-links">
+          <li><a href="#">Terms and Conditions</a></li>
+          <li><a href="#">Shipping</a></li>
+          <li><a href="#">Returns</a></li>
+          <li><a href="#">FAQ</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4 class="footer-title">HELP</h4>
+        <ul class="footer-links">
+          <li><span class="footer-text">📞 +91 98765 43210</span></li>
+          <li><span class="footer-text">✉️ archive@kansya.in</span></li>
+          <li><span class="footer-text">🕒 Active (Mon-Sat) 10 AM - 6 PM</span></li>
+        </ul>
+      </div>
+      <div class="footer-newsletter">
+        <h4 class="footer-title">SUBSCRIBE TO OUR NEWSLETTER</h4>
+        <form class="newsletter-form" onsubmit="event.preventDefault();">
+          <input type="email" placeholder="Your e..." required>
+          <button type="submit">SUBSCRIBE</button>
+        </form>
+        <h4 class="footer-title">GIVE US A FOLLOW</h4>
+        <div class="social-icons">
+          <a href="#" class="social-icon">f</a>
+          <a href="#" class="social-icon">x</a>
+          <a href="#" class="social-icon">in</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      &copy; 2026 AAKAAR Dhokra Collective. All rights reserved.
+    </div>
+  </footer>
+
+</body>
+</html>
